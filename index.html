@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kwaw · Engineering profile</title>
+<meta name="description" content="Software engineer working on infrastructure, networking and observability. Ten years of public work on GitHub, from delivery dispatch to eBPF and deploy tooling.">
+<meta property="og:title" content="Kwaw · Engineering profile">
+<meta property="og:description" content="Software engineer working on infrastructure, networking and observability. Ten years of public work on GitHub, from delivery dispatch to eBPF and deploy tooling.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232a78d6'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='17' font-weight='700' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one reading column. Who I am and the shape of ten years first, then focus areas, then the evidence tables. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #fcfcfb;
+  --ink: #12161d;
+  --ink-2: #4a5160;
+  --ink-3: #7a8191;
+  --line: #dfe2e8;
+  --accent: #2a78d6;
+  --accent-soft: #e3edfa;
+  --band: #eef0f4;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #111317; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86; --line: #32343a;
+    --accent: #3987e5; --accent-soft: #1b2a40; --band: #202227;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111317; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86; --line: #32343a;
+  --accent: #3987e5; --accent-soft: #1b2a40; --band: #202227;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--font-body); }
+a { color: inherit; text-decoration-color: var(--ink-3); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; display: flex; flex-direction: column; gap: 46px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: 36px; line-height: 1.1; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+p { margin: 0; }
+.lede { color: var(--ink-2); max-width: 68ch; margin-top: 10px; font-size: 16px; }
+.sub { color: var(--ink-2); max-width: 70ch; margin-top: 4px; font-size: 14px; }
+header .ids { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; font: 13px var(--font-mono); color: var(--ink-2); }
+section { display: flex; flex-direction: column; gap: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.tile { background: var(--surface); padding: 14px 16px; }
+.tile b { display: block; font: 500 28px/1.1 var(--font-mono); font-variant-numeric: tabular-nums; }
+.tile span { color: var(--ink-2); font-size: 13px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart text { font: 11px var(--font-mono); fill: var(--ink-3); }
+.chart .era { font: 600 12px var(--font-body); fill: var(--ink-2); }
+.chart .lbl { fill: var(--ink-2); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 9px; border-radius: 5px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0; z-index: 2; }
+.tip.on { opacity: 1; }
+.eras { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 14px; }
+.eras div { border-top: 2px solid var(--line); padding-top: 8px; }
+.eras b { display: block; font-size: 14px; }
+.eras span { display: block; font: 12px var(--font-mono); color: var(--ink-3); margin: 2px 0 4px; }
+.eras p { font-size: 13.5px; color: var(--ink-2); }
+.theme { display: flex; flex-direction: column; gap: 10px; }
+.theme + .theme { margin-top: 26px; }
+.theme-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.theme-head p { color: var(--ink-2); font-size: 14px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 7px; }
+.card h3 a { text-decoration: none; }
+.card h3 a:hover { text-decoration: underline; }
+.card p { color: var(--ink-2); font-size: 14px; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font: 12px var(--font-mono); color: var(--ink-3); margin-top: auto; padding-top: 4px; }
+.grid-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font: 500 12px var(--font-body); color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; background: var(--surface); }
+td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.lgrid td, .lgrid th { text-align: center; padding: 6px 4px; border: 0; }
+.lgrid td:first-child, .lgrid th:first-child { text-align: left; padding-left: 0; white-space: nowrap; font-size: 13.5px; }
+.lgrid .cell { display: block; min-width: 38px; height: 30px; line-height: 30px; border-radius: 4px; font: 12px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.lgrid .z { color: var(--ink-3); opacity: .45; }
+td.num, td.date { font: 13px var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-2); }
+td .note { display: block; color: var(--ink-2); font-size: 13px; margin-top: 2px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 14px; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.box p { color: var(--ink-2); font-size: 14px; }
+.kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.kv b { display: block; font: 500 22px var(--font-mono); }
+.kv span { font-size: 12.5px; color: var(--ink-2); }
+.btn { align-self: flex-start; display: inline-block; font-size: 14px; font-weight: 500; text-decoration: none; padding: 7px 12px; border: 1px solid var(--accent); border-radius: 6px; color: var(--ink); }
+.btn:hover { background: var(--accent-soft); }
+.list { display: flex; flex-direction: column; }
+.list div { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.list div:first-child { border-top: 0; padding-top: 0; }
+.list .r { font: 12.5px var(--font-mono); color: var(--ink-3); }
+.list .t { grid-column: 1 / -1; color: var(--ink-2); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.controls input, .controls select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; }
+.controls input { flex: 1 1 220px; min-width: 0; }
+.controls .count { margin-left: auto; font: 13px var(--font-mono); color: var(--ink-2); }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; max-height: 620px; overflow-y: auto; }
+.tablewrap th { position: sticky; top: 0; }
+.tag { font: 12px var(--font-mono); color: var(--ink-2); white-space: nowrap; }
+.empty { padding: 28px; text-align: center; color: var(--ink-2); }
+footer { color: var(--ink-2); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 18px; display: flex; flex-direction: column; gap: 8px; max-width: 78ch; }
+@media (max-width: 560px) { h1 { font-size: 28px; } .kv { grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .tip { transition: opacity .12s; } }
+
+.site-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; font-size: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: -18px; }
+.site-nav .home { font-family: var(--font-display); font-weight: 600; font-size: 16px; text-decoration: none; margin-right: auto; }
+.site-nav a { text-decoration: none; color: var(--ink-2); }
+.site-nav a:hover { color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent, var(--code)); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+</style>
+</head>
+<body>
+<main>
+<nav class="site-nav" aria-label="Site"><a class="home" href="index.html">Kwaw</a><a href="index.html" aria-current="page">Overview</a><a href="flyio.html">Fly.io work</a><a href="https://github.com/gwuah">GitHub</a></nav>
+<header>
+  <h1>Kwaw (Griffith Asare Awuah)</h1>
+  <p class="lede" id="lede"></p>
+  <div class="ids">
+    <span><a href="https://github.com/gwuah">github.com/gwuah</a></span>
+    <span id="loc"></span>
+    <span>Org <a href="https://github.com/bearsignals">bearsignals</a></span>
+  </div>
+</header>
+
+<section aria-label="Totals"><div class="tiles" id="tiles"></div></section>
+
+<section>
+  <div>
+    <h2>Ten years of activity</h2>
+    <p class="sub">GitHub contributions per month, from the public contribution calendar. The shaded bands mark four periods that the repositories themselves make visible.</p>
+  </div>
+  <div class="panel">
+    <div class="chart" id="timeline"><div class="tip" id="tip"></div></div>
+    <div class="eras" id="eras"></div>
+  </div>
+</section>
+
+<section>
+  <div>
+    <h2>Focus areas</h2>
+    <p class="sub">Three representative public projects in each of six areas, summarised from their READMEs and code.</p>
+  </div>
+  <div id="featured"></div>
+</section>
+
+<section>
+  <div>
+    <h2>Languages over time</h2>
+    <p class="sub">Primary language of each public repository, by the year it was created. The move from JavaScript and Python to Go, then Rust, follows the move from web apps to systems.</p>
+  </div>
+  <div class="panel grid-wrap"><table class="lgrid" id="lgrid"></table></div>
+</section>
+
+<section>
+  <div>
+    <h2>Beyond my own repositories</h2>
+    <p class="sub">Work in organisations and other people's projects.</p>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>Fly.io, 2023 to 2024</h3>
+      <p>Platform engineer on flyctl, the Fly.io command-line tool, and its remote builders: blue-green deployments, deploys without WireGuard, and OpenTelemetry tracing across the deploy path. I also answered customers on the community forum.</p>
+      <div class="kv" id="flykv"></div>
+      <a class="btn" id="flylink" href="#">Open the full Fly.io record</a>
+    </div>
+    <div class="box">
+      <h3>bearsignals, 2026</h3>
+      <p>My own organisation. Two Go tools for running parallel development environments, one per git worktree, built for working alongside coding agents.</p>
+      <div class="list" id="bear"></div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>Merged into other people's projects</h3>
+      <div class="list" id="outside"></div>
+    </div>
+    <div class="box">
+      <h3>Issues reported upstream</h3>
+      <p id="issuesub"></p>
+      <div class="list" id="issues"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div>
+    <h2>All public repositories</h2>
+    <p class="sub">Every public repository I own, excluding forks. Search by name or description, or filter by area and language.</p>
+  </div>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search repositories" aria-label="Search repositories">
+    <select id="th" aria-label="Area"></select>
+    <select id="lang" aria-label="Language"></select>
+    <select id="sort" aria-label="Sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="stars">Most stars</option></select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>Repository</th><th>Area</th><th>Language</th><th>Stars</th><th>Created</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+
+<footer>
+  <p><strong>How this was made.</strong> Compiled in November 2026 from GitHub's public API, my profile and contribution calendar, and the READMEs and code of my public repositories. The four periods, the areas and the project summaries are editorial.</p>
+  <p><strong>What is not included.</strong> Private repositories, forks and work in private organisations. The contribution calendar is GitHub's own count and may include private contributions, which GitHub shows without detail.</p>
+</footer>
+</main>
+
+<script>
+const D = {"profile": {"handle": "gwuah", "name": "Kwaw", "legal": "Griffith Asare Awuah", "bio": "eng (ml, observability, networking, infra)", "location": "Rotterdam, Netherlands", "org": "bearsignals", "site": "gwuah.com", "followers": 279}, "cal": {"2017": [4, 1, 0, 0, 1, 0, 1, 0, 9, 14, 8, 6], "2018": [3, 5, 4, 1, 0, 6, 13, 27, 175, 84, 22, 7], "2019": [42, 6, 1, 0, 1, 1, 2, 53, 26, 31, 31, 20], "2020": [32, 51, 45, 53, 66, 72, 81, 60, 71, 113, 101, 203], "2021": [188, 207, 200, 124, 100, 235, 172, 192, 260, 143, 140, 52], "2022": [131, 70, 70, 49, 123, 175, 103, 67, 62, 25, 20, 20], "2023": [21, 65, 87, 80, 78, 100, 66, 95, 57, 31, 24, 34], "2024": [61, 34, 67, 78, 54, 81, 40, 27, 20, 3, 6, 2], "2025": [5, 13, 8, 16, 111, 47, 14, 86, 102, 22, 149, 256], "2026": [213, 83, 45, 4, 3, 30, 4, 32, 51, 44, 35, 0]}, "eras": [{"from": "2017-01", "to": "2019-12", "name": "Web, bots and extensions", "text": "Small JavaScript and Python projects, mostly finished in days: Chrome extensions, Twitter and Telegram bots, scrapers, Node and Vue apps."}, {"from": "2020-01", "to": "2023-01", "name": "Backend and systems", "text": "A shift to Go and to systems with moving parts: delivery dispatch, geospatial indexing, payments, then networking in Rust and eBPF."}, {"from": "2023-02", "to": "2024-09", "name": "Fly.io", "text": "Platform engineering on flyctl and its builders: 94 pull requests, plus side projects that test or extend the platform."}, {"from": "2024-10", "to": "2026-11", "name": "Independent work", "text": "Ledgers and banking APIs, kernel networking, personal tools in Rust, and dev environments for working alongside coding agents."}], "themes": {"geo": {"name": "Logistics and geospatial", "desc": "Dispatch, proximity search and ETAs for delivery and ride-hailing, built on Uber's H3 index."}, "pay": {"name": "Payments and ledgers", "desc": "Wallets, double-entry accounting and bank-data APIs."}, "net": {"name": "Networking and the kernel", "desc": "Tunnels, proxies and packet rewriting with TUN devices, XDP and eBPF."}, "plat": {"name": "Deployment platforms", "desc": "Orchestration, agents and reproductions around Fly.io's Machines platform."}, "dev": {"name": "Developer tools", "desc": "Tools that remove friction from my own work, from retrying dropped connections to parallel dev environments."}, "lang": {"name": "Languages and compilers", "desc": "Interpreters, compiler front ends and algorithm practice."}, "apps": {"name": "Products and apps", "desc": "Full applications: housing search, feedback, payments for students, social apps."}, "web": {"name": "Web, bots and extensions", "desc": "Browser extensions, chat and Twitter bots, scrapers and small libraries."}, "learn": {"name": "Learning repositories", "desc": "Course work, tutorials and exercises kept in public."}}, "repos": [{"n": "serve-football-league", "d": "A python clone of the Fantasy Football League. [Still Work In Progress]", "l": "Python", "s": 0, "f": 0, "c": "2017-01-08", "p": "2017-01-30", "a": false, "th": "apps"}, {"n": "udemy-course-link-extractor", "d": ":rainbow: a program that extracts lecture video links of a Udemy course a user has purchased.", "l": "Python", "s": 3, "f": 1, "c": "2017-01-19", "p": "2017-07-29", "a": false, "th": "web"}, {"n": "kermit", "d": ":princess: mini trojan that dumps your browser login history", "l": "Python", "s": 2, "f": 0, "c": "2017-02-21", "p": "2017-02-21", "a": false, "th": "web"}, {"n": "deSMB", "d": "Automatically disables SMB-1 on all Windows machines and also shuts down port 445", "l": "Python", "s": 1, "f": 0, "c": "2017-05-15", "p": "2017-05-18", "a": false, "th": "net"}, {"n": "mudClone", "d": ":zap:  { Major competitor to Mudclo }  -- Built in 4hrs", "l": "CSS", "s": 1, "f": 0, "c": "2017-07-26", "p": "2017-07-26", "a": false, "th": "apps"}, {"n": "crash-course-remote", "d": "remote crash course. nothing serious", "l": "HTML", "s": 0, "f": 0, "c": "2017-09-09", "p": "2017-09-12", "a": false, "th": "learn"}, {"n": "ogma", "d": ":fire: Super Tiny Language Detetection Library", "l": "Python", "s": 1, "f": 0, "c": "2017-09-16", "p": "2017-09-16", "a": false, "th": "lang"}, {"n": "livescores-scraper", "d": "A script that scrapes score data from livescores.com", "l": "Python", "s": 3, "f": 2, "c": "2017-09-23", "p": "2018-08-10", "a": false, "th": "web"}, {"n": "todo-list", "d": "A minimal todo list built with Vanilla Javascript", "l": "JavaScript", "s": 2, "f": 0, "c": "2017-10-01", "p": "2017-10-02", "a": false, "th": "learn"}, {"n": "gwuah.github.io", "d": "website", "l": "CSS", "s": 0, "f": 0, "c": "2017-10-11", "p": "2017-10-18", "a": false, "th": "learn"}, {"n": "schoology-py", "d": "A script that alerts me when new courses, materials, or updates to my schoology circle", "l": "", "s": 2, "f": 0, "c": "2017-10-15", "p": "2017-10-15", "a": false, "th": "web"}, {"n": "hermes", "d": "a highly unstable irc client", "l": "Python", "s": 3, "f": 0, "c": "2017-10-20", "p": "2017-10-20", "a": false, "th": "net"}, {"n": "heatmap", "d": ":neckbeard: a minimal javascript library that generates user activity heat-maps for your website.", "l": "JavaScript", "s": 6, "f": 0, "c": "2017-10-22", "p": "2017-11-18", "a": false, "th": "web"}, {"n": "axel", "d": ":frog: Unique containers per namespace in local-storage.", "l": "JavaScript", "s": 2, "f": 0, "c": "2017-11-04", "p": "2018-09-09", "a": false, "th": "web"}, {"n": "twitter-save", "d": ":zap:  chrome extension that enables you to save tweets for later reference!", "l": "JavaScript", "s": 3, "f": 0, "c": "2017-11-10", "p": "2017-11-17", "a": false, "th": "web"}, {"n": "full-medium", "d": ":zap: a chrome extension that allows you to read more words per viewport height on medium.com!", "l": "JavaScript", "s": 0, "f": 0, "c": "2017-11-14", "p": "2017-11-14", "a": false, "th": "web"}, {"n": "Kreeboard", "d": ":zap: Chrome Dashboard", "l": "CSS", "s": 1, "f": 0, "c": "2017-11-18", "p": "2017-11-18", "a": false, "th": "web"}, {"n": "telegram-bot", "d": "A simple telegram bot i worked on sometime back! Deployed with NOW!", "l": "JavaScript", "s": 1, "f": 0, "c": "2017-11-30", "p": "2017-11-30", "a": false, "th": "web"}, {"n": "the-node-modules-exterminator", "d": ":skull: Hunts your pc for node_modules folders and eats them up!", "l": "Python", "s": 0, "f": 0, "c": "2017-12-02", "p": "2017-12-02", "a": false, "th": "dev"}, {"n": "the-taipist", "d": "whetting my appetite!", "l": "JavaScript", "s": 0, "f": 0, "c": "2017-12-15", "p": "2017-12-15", "a": false, "th": "learn"}, {"n": "crypto-king", "d": ":fire: tiny node app that returns prices of all major crypto-coins", "l": "JavaScript", "s": 0, "f": 0, "c": "2017-12-19", "p": "2017-12-19", "a": false, "th": "web"}, {"n": "crypto-maniac", "d": ":moneybag:  Keep track of the top 6 crypto-currencies in real time. Comes with a nice Nice UI too.", "l": "JavaScript", "s": 5, "f": 1, "c": "2017-12-23", "p": "2017-12-25", "a": false, "th": "web"}, {"n": "automation-scripts", "d": ":smile: remote repo where I store all my automation scripts", "l": "Python", "s": 0, "f": 0, "c": "2018-01-05", "p": "2019-01-23", "a": false, "th": "dev"}, {"n": "mimosa", "d": ":cactus: a lightweight javascript library for building beautiful drop-downs.", "l": "HTML", "s": 2, "f": 0, "c": "2018-01-23", "p": "2018-01-31", "a": false, "th": "web"}, {"n": "xenar", "d": ":smiling_imp:  Chrome extension blocks in-browser crypto-miners.", "l": "JavaScript", "s": 3, "f": 0, "c": "2018-02-06", "p": "2018-02-12", "a": false, "th": "web"}, {"n": "Fairytale", "d": ":dollar: Some random project by @gwuah and I", "l": "CSS", "s": 1, "f": 0, "c": "2018-02-06", "p": "2018-02-06", "a": false, "th": "apps"}, {"n": "sherperd", "d": ":guardsman: A twitter account growth service. [ Built with Node.js ]", "l": "JavaScript", "s": 5, "f": 1, "c": "2018-02-12", "p": "2022-12-09", "a": false, "th": "web"}, {"n": "twit-traction", "d": ":punch: Gain more impressions per tweet. [ good for ad's ]", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-02-12", "p": "2020-04-01", "a": false, "th": "web"}, {"n": "token-daily-telegram-bot", "d": "A token-daily news bot that runs on telegram.", "l": "JavaScript", "s": 3, "f": 0, "c": "2018-02-14", "p": "2018-02-14", "a": false, "th": "web"}, {"n": "afdtechbot", "d": ":fire: A twitter-bot that monitors twitter’s tweet stream for the afdtechtalk hashtag ( #afdtechtalk )", "l": "", "s": 2, "f": 0, "c": "2018-03-05", "p": "2018-03-05", "a": false, "th": "web"}, {"n": "adsumo-online-resturant", "d": "A web application built to serve a restaurants services online. [Vue, Node]", "l": "CSS", "s": 1, "f": 0, "c": "2018-03-17", "p": "2018-03-24", "a": false, "th": "apps"}, {"n": "management-software", "d": "CLI management software written in c++ and python", "l": "C++", "s": 1, "f": 0, "c": "2018-03-19", "p": "2018-03-19", "a": false, "th": "apps"}, {"n": "hacklab-mon", "d": "A twitter bot to monitor the #hacklab2018 hastag", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-04-07", "p": "2018-04-07", "a": false, "th": "web"}, {"n": "debuger", "d": "a tunnel to communicate with casprine", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-06-05", "p": "2018-06-05", "a": false, "th": "net"}, {"n": "kerious", "d": "A minimal version of curious cat.", "l": "CSS", "s": 2, "f": 1, "c": "2018-06-09", "p": "2018-06-13", "a": false, "th": "apps"}, {"n": "Stark-blog", "d": ":zap: :zap: Blog for stark", "l": "Vue", "s": 0, "f": 0, "c": "2018-06-23", "p": "2018-06-24", "a": false, "th": "apps"}, {"n": "job-board-scrapers", "d": "Job board scrapers", "l": "JavaScript", "s": 0, "f": 1, "c": "2018-06-27", "p": "2018-07-20", "a": false, "th": "web"}, {"n": "feedback-hunt", "d": "Get customer feedback, in realtime, with absolutely zero hassle.", "l": "HTML", "s": 1, "f": 1, "c": "2018-07-02", "p": "2018-07-16", "a": false, "th": "apps"}, {"n": "feedbackhunt-frontend", "d": "frontend for feedback hunt(it's messed up, will be changing my architecture soon)", "l": "Vue", "s": 1, "f": 0, "c": "2018-07-16", "p": "2018-07-16", "a": false, "th": "apps"}, {"n": "ts-files", "d": "repo where i store all my typescript learning files", "l": "TypeScript", "s": 0, "f": 0, "c": "2018-07-17", "p": "2018-07-17", "a": false, "th": "learn"}, {"n": "mywebsite", "d": ":skull: my personal website", "l": "Vue", "s": 1, "f": 0, "c": "2018-07-21", "p": "2018-08-09", "a": false, "th": "learn"}, {"n": "tlHeatBot", "d": "A twitter bot that alert's you whenever there's heat on the timeline", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-07-23", "p": "2018-07-24", "a": false, "th": "web"}, {"n": "watcher-project", "d": "Messenger bot that monitors stocks on google trends.", "l": "JavaScript", "s": 0, "f": 1, "c": "2018-07-24", "p": "2018-07-31", "a": false, "th": "web"}, {"n": "reactive-hub", "d": "A repo where I'll keep all my react learning course.", "l": "HTML", "s": 0, "f": 0, "c": "2018-07-25", "p": "2018-08-03", "a": false, "th": "learn"}, {"n": "dropout", "d": "A realtime code collaboration project built during figma/github hackathon 2018.", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-07-28", "p": "2018-08-10", "a": false, "th": "apps"}, {"n": "simple-flask-server", "d": "A simple server built with Flask", "l": "Python", "s": 0, "f": 0, "c": "2018-08-02", "p": "2018-08-02", "a": false, "th": "learn"}, {"n": "aidahrector", "d": "A simple chrome extension I built to speedup development", "l": "JavaScript", "s": 1, "f": 0, "c": "2018-08-06", "p": "2018-08-07", "a": false, "th": "dev"}, {"n": "mailcollector", "d": "a tiny micro-service to record and serve customer emails. [python]", "l": "", "s": 1, "f": 0, "c": "2018-08-14", "p": "2018-08-14", "a": false, "th": "web"}, {"n": "node-starter-griffith", "d": ":fire: A custom starter file for all my node projects. [@gwuah]", "l": "JavaScript", "s": 1, "f": 0, "c": "2018-08-15", "p": "2018-08-15", "a": false, "th": "dev"}, {"n": "react-todo-list", "d": "TodoList built with reactjs", "l": "", "s": 0, "f": 0, "c": "2018-08-15", "p": "2018-08-15", "a": false, "th": "learn"}, {"n": "react-weather-app", "d": "A simple and basic weather app built with react.", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-08-15", "p": "2018-08-15", "a": false, "th": "learn"}, {"n": "dashboard-simple", "d": "A dashboard that contains dashboard components like charts, cards etc. [ tabler ]", "l": "CSS", "s": 0, "f": 0, "c": "2018-08-19", "p": "2018-10-19", "a": false, "th": "learn"}, {"n": "instacart", "d": "Instacart's cart component built with React.js", "l": "JavaScript", "s": 1, "f": 0, "c": "2018-08-30", "p": "2018-08-30", "a": false, "th": "learn"}, {"n": "webpack-virtual-module-api", "d": ":gift: a virtual-module-api for webpack. [wip]", "l": "", "s": 0, "f": 0, "c": "2018-09-07", "p": "2018-09-07", "a": false, "th": "dev"}, {"n": "node-auth-jwt", "d": "Implement authentication in nodejs using jsonwebtokens.", "l": "JavaScript", "s": 1, "f": 0, "c": "2018-09-15", "p": "2018-09-15", "a": false, "th": "learn"}, {"n": "blaze", "d": ":honeybee: Ultimate Starter For Large Node Applications.", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-09-25", "p": "2018-10-08", "a": true, "th": "dev"}, {"n": "lamaison", "d": "One place for tertiary students and workers to find affordable hostels/housing", "l": "JavaScript", "s": 2, "f": 0, "c": "2018-10-04", "p": "2019-01-21", "a": false, "th": "apps"}, {"n": "lamaison-frontend", "d": "Web Application For Laimaison Project [ https://lamaison-frontend.netlify.com ]", "l": "Vue", "s": 1, "f": 0, "c": "2018-10-07", "p": "2018-10-14", "a": false, "th": "apps"}, {"n": "hubtel-sms-node", "d": "A nodejs wrapper for hubtel's sms api.", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-10-13", "p": "2018-12-27", "a": false, "th": "web"}, {"n": "afromakers-landing-page", "d": "Landing page for afromakers website.", "l": "HTML", "s": 0, "f": 0, "c": "2018-10-25", "p": "2018-10-25", "a": false, "th": "apps"}, {"n": "RabbitMQ-learning", "d": "A repo that will contain all exercises I used to get a grip on rabbitMQ", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-11-09", "p": "2018-11-09", "a": false, "th": "learn"}, {"n": "job2twitter", "d": "A web service that handles tweeting of stuff based on data sent to webhook.", "l": "JavaScript", "s": 0, "f": 0, "c": "2018-11-18", "p": "2018-11-18", "a": false, "th": "web"}, {"n": "advent-of-code-2018", "d": "Repo where I'll keep all my solutions to advent-of-code-2018 puzzles.", "l": "Python", "s": 0, "f": 0, "c": "2018-12-01", "p": "2018-12-03", "a": false, "th": "lang"}, {"n": "humano-rescue", "d": "", "l": "HTML", "s": 0, "f": 0, "c": "2018-12-29", "p": "2019-06-06", "a": false, "th": "apps"}, {"n": "eva", "d": ":star: A command line tool that setups a new express project. [more like express-cli, but for larger applications]", "l": "", "s": 1, "f": 0, "c": "2019-01-01", "p": "2019-01-01", "a": false, "th": "dev"}, {"n": "redux-primer", "d": "Contains all applications I built whiles learning redux.", "l": "JavaScript", "s": 0, "f": 0, "c": "2019-02-12", "p": "2019-02-13", "a": false, "th": "learn"}, {"n": "gotham", "d": "exercises to learn golang. Especially implementations of classic cs algorithms. [More into java now]", "l": "Go", "s": 2, "f": 0, "c": "2019-05-17", "p": "2019-05-18", "a": false, "th": "lang"}, {"n": "petra-interview", "d": "todo app for petra interview", "l": "TypeScript", "s": 0, "f": 0, "c": "2019-07-25", "p": "2019-07-26", "a": false, "th": "learn"}, {"n": "node-server-boilerplate", "d": "A boilerplate for hacking up quick nodejs servers", "l": "JavaScript", "s": 3, "f": 0, "c": "2019-08-24", "p": "2019-08-24", "a": false, "th": "dev"}, {"n": "java-course", "d": "repository for all java projects i'll work on through this course.", "l": "Java", "s": 0, "f": 0, "c": "2019-09-15", "p": "2019-11-05", "a": false, "th": "learn"}, {"n": "ds-algorithms", "d": "practicing ds-algorithms to improve my problem solving ability", "l": "JavaScript", "s": 3, "f": 0, "c": "2019-12-14", "p": "2020-04-25", "a": false, "th": "lang"}, {"n": "remove-screenshots", "d": "simple script to clear up my desktop", "l": "Python", "s": 0, "f": 0, "c": "2020-05-06", "p": "2020-05-06", "a": false, "th": "dev"}, {"n": "geo-indexer", "d": "a simple geo-coordinate indexing service.", "l": "Go", "s": 9, "f": 1, "c": "2020-05-22", "p": "2020-06-02", "a": false, "th": "geo"}, {"n": "scully", "d": "A golang wrapper around mapbox apis", "l": "Go", "s": 1, "f": 0, "c": "2020-05-29", "p": "2020-05-30", "a": false, "th": "geo"}, {"n": "341fe", "d": "ILOC Compiler", "l": "Java", "s": 1, "f": 0, "c": "2020-06-12", "p": "2020-06-14", "a": false, "th": "lang"}, {"n": "athena", "d": "geo-indexing / dispatch / ETA / proximity-search", "l": "Go", "s": 8, "f": 2, "c": "2020-07-15", "p": "2021-05-30", "a": false, "th": "geo"}, {"n": "simple-kafka-example", "d": "Example usage of Kafka for messaging.", "l": "JavaScript", "s": 0, "f": 0, "c": "2020-07-15", "p": "2020-07-15", "a": false, "th": "learn"}, {"n": "donkey", "d": "interpreter for donkey-lang", "l": "Go", "s": 0, "f": 0, "c": "2020-07-30", "p": "2020-08-10", "a": false, "th": "lang"}, {"n": "pasta", "d": "loc counter", "l": "Go", "s": 0, "f": 0, "c": "2020-08-20", "p": "2020-08-20", "a": false, "th": "dev"}, {"n": "website", "d": "building a website for myself.", "l": "HTML", "s": 1, "f": 0, "c": "2020-08-22", "p": "2020-08-22", "a": false, "th": "learn"}, {"n": "postmates", "d": "uber, but for on-demand delivery.", "l": "Go", "s": 162, "f": 23, "c": "2020-09-11", "p": "2022-08-10", "a": false, "th": "geo"}, {"n": "felix", "d": "learning git", "l": "JavaScript", "s": 1, "f": 0, "c": "2020-12-26", "p": "2020-12-26", "a": false, "th": "learn"}, {"n": "cashapp", "d": "peer-to-peer payments service", "l": "Go", "s": 35, "f": 13, "c": "2021-01-02", "p": "2022-03-17", "a": false, "th": "pay"}, {"n": "react-bootcamp", "d": "my attempt at teaching few people reactjs", "l": "JavaScript", "s": 1, "f": 1, "c": "2021-01-31", "p": "2021-01-31", "a": false, "th": "learn"}, {"n": "go-process-killer", "d": "a program that hunts for all go processes and kills them", "l": "Go", "s": 3, "f": 0, "c": "2021-03-15", "p": "2021-03-15", "a": false, "th": "dev"}, {"n": "adventofcode21", "d": "solutions to advent of code 2021", "l": "Go", "s": 0, "f": 0, "c": "2021-12-02", "p": "2021-12-04", "a": true, "th": "lang"}, {"n": "tinderclone", "d": "tinderclone api", "l": "Go", "s": 4, "f": 0, "c": "2022-01-10", "p": "2023-01-05", "a": false, "th": "apps"}, {"n": "rproxy", "d": "🤟🏾 the world's greatest reverse proxy", "l": "Go", "s": 6, "f": 1, "c": "2022-07-11", "p": "2022-07-11", "a": false, "th": "net"}, {"n": "subway", "d": "l3 network tunneling software", "l": "Rust", "s": 25, "f": 0, "c": "2022-09-21", "p": "2022-09-22", "a": false, "th": "net"}, {"n": "jenkinss", "d": "", "l": "Groovy", "s": 0, "f": 0, "c": "2023-03-31", "p": "2023-04-03", "a": true, "th": "plat"}, {"n": "fly-notification-agent", "d": "a tiny agent that runs in your vm", "l": "Go", "s": 0, "f": 0, "c": "2023-05-12", "p": "2023-05-15", "a": false, "th": "plat"}, {"n": "rds", "d": "an un-official orchestrator for fly.io", "l": "Go", "s": 0, "f": 0, "c": "2024-06-23", "p": "2024-06-27", "a": false, "th": "plat"}, {"n": "idle-timeout-test", "d": "test idle timeout functionality on flyio", "l": "Go", "s": 0, "f": 0, "c": "2024-08-09", "p": "2024-08-09", "a": false, "th": "plat"}, {"n": "accounts", "d": "core banking service", "l": "Go", "s": 8, "f": 2, "c": "2024-09-05", "p": "2025-08-20", "a": false, "th": "pay"}, {"n": "roco", "d": "retry unix commands on specific errors", "l": "Rust", "s": 0, "f": 0, "c": "2024-09-12", "p": "2024-09-12", "a": false, "th": "dev"}, {"n": "brank-core", "d": "plaid for africa", "l": "Go", "s": 1, "f": 0, "c": "2024-10-25", "p": "2024-10-25", "a": false, "th": "pay"}, {"n": "dev-proxy", "d": "implementation of monzo's devproxy", "l": "Go", "s": 0, "f": 0, "c": "2024-11-08", "p": "2024-11-09", "a": false, "th": "dev"}, {"n": "many-ports", "d": "simple tcp-proxy powered by ebpf 🐝", "l": "Go", "s": 0, "f": 0, "c": "2024-12-04", "p": "2024-12-04", "a": false, "th": "net"}, {"n": "bibliotek", "d": "📚🦀", "l": "Rust", "s": 2, "f": 0, "c": "2025-07-28", "p": "2026-07-21", "a": false, "th": "dev"}, {"n": "light", "d": "", "l": "JavaScript", "s": 4, "f": 0, "c": "2025-08-04", "p": "2025-12-20", "a": false, "th": "dev"}, {"n": "libsql-sync-repro", "d": "", "l": "Rust", "s": 0, "f": 0, "c": "2026-02-06", "p": "2026-02-07", "a": false, "th": "plat"}], "featured": [{"theme": "geo", "items": [{"n": "postmates", "url": "https://github.com/gwuah/postmates", "l": "Go", "s": 162, "f": 23, "c": "2020-09-11", "text": "The core of an on-demand delivery service. Couriers are indexed with Uber's H3 and grouped in Redis, send their location every three seconds over WebSockets, and each order is offered to the nearest free courier for five seconds before moving to the next.", "lines": 3331}, {"n": "athena", "url": "https://github.com/gwuah/athena", "l": "Go", "s": 8, "f": 2, "c": "2020-07-15", "text": "Geo-indexing, proximity search and ETAs as a reusable service, with Mapbox's distance matrix used to rank results.", "lines": 868}, {"n": "geo-indexer", "url": "https://github.com/gwuah/geo-indexer", "l": "Go", "s": 9, "f": 1, "c": "2020-05-22", "text": "Groups user IDs under H3 cells in Redis: the building block for live supply, demand and surge pricing.", "lines": 271}]}, {"theme": "pay", "items": [{"n": "cashapp", "url": "https://github.com/gwuah/cashapp", "l": "Go", "s": 35, "f": 13, "c": "2021-01-02", "text": "Peer-to-peer payments with users, wallets, transactions and balances. The README is candid that this first version assumes nothing fails; a private second version added retries, a queue and a ledger.", "lines": 1035}, {"n": "accounts", "url": "https://github.com/gwuah/accounts", "l": "Go", "s": 8, "f": 2, "c": "2024-09-05", "text": "A core banking service on double-entry bookkeeping: every transaction is a debit and a credit, amounts are stored in cents, transaction lines can't be updated or deleted, and idempotency keys stop duplicate transfers.", "lines": 1423}, {"n": "brank-core", "url": "https://github.com/gwuah/brank-core", "l": "Go", "s": 1, "f": 0, "c": "2024-10-25", "text": "Core API for Brank, a bank-data aggregation service described as Plaid for Africa.", "lines": 3832}]}, {"theme": "net", "items": [{"n": "subway", "url": "https://github.com/gwuah/subway", "l": "Rust", "s": 25, "f": 0, "c": "2022-09-21", "text": "A layer-3 VPN in Rust. Traffic enters a TUN device, crosses UDP to an exit node you own, and leaves through NAT. Written, the README says, to solidify networking knowledge.", "lines": 728}, {"n": "many-ports", "url": "https://github.com/gwuah/many-ports", "l": "Go", "s": 0, "f": 0, "c": "2024-12-04", "text": "A TCP proxy where an eBPF program in the kernel steers traffic for many ports to one socket, and a userspace proxy routes it to the right backend.", "lines": 545}, {"n": "rproxy", "url": "https://github.com/gwuah/rproxy", "l": "Go", "s": 6, "f": 1, "c": "2022-07-11", "text": "An XDP program that drops packets bound for a port and rewrites packets aimed at the reversed port number to reach it.", "lines": 225}]}, {"theme": "plat", "items": [{"n": "rds", "url": "https://github.com/gwuah/rds", "l": "Go", "s": 0, "f": 0, "c": "2024-06-23", "text": "A remote deployment service that orchestrates deploys through the Fly Machines API, moving orchestration out of the CLI and into a server.", "lines": 2001}, {"n": "fly-notification-agent", "url": "https://github.com/gwuah/fly-notification-agent", "l": "Go", "s": 0, "f": 0, "c": "2023-05-12", "text": "An agent that runs inside a Fly machine and calls a webhook when the machine starts, stops or runs out of memory. Built the same week I asked forum users what they would do with machine events.", "lines": 161}, {"n": "idle-timeout-test", "url": "https://github.com/gwuah/idle-timeout-test", "l": "Go", "s": 0, "f": 0, "c": "2024-08-09", "text": "A reproduction showing a configured idle timeout wasn't applied. Created the day I opened the flyctl PR that exposed the setting.", "lines": 112}]}, {"theme": "dev", "items": [{"n": "bearsignals/mono", "url": "https://github.com/bearsignals/mono", "l": "Go", "s": null, "c": "2026-01-12", "text": "Runs a parallel dev environment for each git worktree: its own tmux session, isolated Docker Compose services, unique ports and shared caches for node_modules and Rust builds. Made for working alongside coding agents.", "lines": null}, {"n": "roco", "url": "https://github.com/gwuah/roco", "l": "Rust", "s": 0, "f": 0, "c": "2024-09-12", "text": "Retries Unix commands when they fail on specific errors. Written to keep kubectl port-forwards alive over an unreliable home connection while working with over 100 microservices.", "lines": 85}, {"n": "bibliotek", "url": "https://github.com/gwuah/bibliotek", "l": "Rust", "s": 2, "f": 0, "c": "2025-07-28", "text": "A personal library for books and web highlights, with a Rust backend and a web frontend.", "lines": 6123}]}, {"theme": "lang", "items": [{"n": "donkey", "url": "https://github.com/gwuah/donkey", "l": "Go", "s": 0, "f": 0, "c": "2020-07-30", "text": "An interpreter for a toy language, written while working through a book on building compilers in Go.", "lines": 622}, {"n": "341fe", "url": "https://github.com/gwuah/341fe", "l": "Java", "s": 1, "f": 0, "c": "2020-06-12", "text": "Front end of an ILOC compiler (scanner, parser and intermediate representation), written for university coursework.", "lines": 512}, {"n": "gotham", "url": "https://github.com/gwuah/gotham", "l": "Go", "s": 2, "f": 0, "c": "2019-05-17", "text": "Classic computer-science algorithms implemented to learn Go.", "lines": null}]}], "years": [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "grid": {"JavaScript": [9, 20, 3, 2, 1, 0, 0, 0, 1, 0], "Go": [0, 0, 1, 6, 3, 2, 1, 6, 0, 0], "HTML/CSS": [4, 9, 0, 1, 0, 0, 0, 0, 0, 0], "Python": [8, 3, 0, 1, 0, 0, 0, 0, 0, 0], "Vue": [0, 4, 0, 0, 0, 0, 0, 0, 0, 0], "Rust": [0, 0, 0, 0, 0, 1, 0, 1, 1, 1], "TypeScript": [0, 1, 1, 0, 0, 0, 0, 0, 0, 0], "Java": [0, 0, 1, 1, 0, 0, 0, 0, 0, 0], "C++": [0, 1, 0, 0, 0, 0, 0, 0, 0, 0], "Groovy": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]}, "outside": [["jajoosam/chhota", 2, "redesigned the user interface for chhota.ga", "2017-10-18"], ["devcongress/made-in-ghana", 16, "added CryptoManiac to the list", "2018-01-12"], ["Automattic/mongoose", 7078, "update migrating_to_5, closed an open bracket", "2018-10-02"], ["qccoders/startup-idea-generator", 24, "added endpoint to return all startups", "2018-10-08"], ["devcongress/connect", 72, "Removed template literal that inserts user's email", "2019-02-10"], ["uber/baseweb", 2916, "docs(panel): custom panel component example", "2020-02-25"], ["uber/baseweb", 2954, "fix(form-control): propagate 'disabled' prop to children", "2020-02-29"], ["uber/baseweb", 2971, "fix(layout-grid): enable conditional rendering", "2020-03-03"], ["uber/baseweb", 3001, "docs(text-area): removed redundant props", "2020-03-08"], ["uber/baseweb", 3041, "fix(tree-view): use node-id as key instead of index", "2020-03-14"], ["FaWayo/url-link-generator", 1, "Resolve issue with redirection", "2021-07-18"], ["BolajiOlajide/kat", 24, "update installation command", "2025-08-12"]], "outsideOpen": [["open-telemetry/opentelemetry-ruby-contrib", 837, "feat: support context propagation through links", "2024-01-29", "open"], ["machinebox/graphql", 83, "Set http response header on graphql response type (if supported)", "2024-04-28", "closed"], ["denoland/deno_install", 5, "Handle outdated openssl error", "2018-09-09", "closed"]], "bear": {"bearsignals/mono": 23, "bearsignals/piko": 15}, "issues": [["uber/h3-go", 34, "Indexes don't match (h3-js and h3-go)", "2020-05-15"], ["mapbox/mapbox-sdk-js", 374, "Return raw coordinates in matrix api request", "2020-05-27"], ["confluentinc/confluent-kafka-go", 574, "Cannot resolve hostname:port error", "2020-12-03"], ["go-gorm/gorm", 3903, "How to make a primary key field, readonly", "2020-12-30"], ["rust-lang/book", 3169, "References to listings are not linked", "2022-05-20"], ["nhorman/dropwatch", 73, "unable to run dropwatch in network namespace", "2022-09-17"], ["psviderski/uncloud", 98, "failure to init cluster (dns tls handshake failure)", "2025-07-19"], ["tursodatabase/turso", 5237, "replication bug with new_synced_database", "2026-02-13"]], "issuesTotal": 33, "outsideTotal": 60, "fly": {"prs": 94, "merged": 74, "repos": 6, "reviews": 52, "forum_posts": 124, "solved": 10, "url": "flyio.html"}, "stars": 348, "forks": 52};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmtDate = d => { const [y, m, dd] = d.split('-'); return `${+dd} ${MON[m - 1]} ${y}`; };
+const fmtMonth = d => { const [y, m] = d.split('-'); return `${MON[m - 1]} ${y}`; };
+const nf = n => n.toLocaleString('en-US');
+
+/* header + tiles */
+const calTotal = Object.values(D.cal).flat().reduce((a, b) => a + b, 0);
+const outsideMerged = D.outside.length;
+$('lede').textContent = `I'm a software engineer working on infrastructure, networking and observability, based in ${D.profile.location}. My public GitHub runs from 2017 to today: ${D.repos.length} public repositories, from browser extensions written in Ghana to a layer-3 VPN in Rust, delivery dispatch on Uber's H3 index, and deploy tooling at Fly.io.`;
+$('loc').textContent = D.profile.location;
+$('tiles').innerHTML = [
+  [D.repos.length, 'public repositories'],
+  [D.stars, 'stars across them'],
+  [nf(calTotal), 'contributions, 2017 to 2026'],
+  [D.fly.prs, 'pull requests at Fly.io'],
+  [outsideMerged, "PRs merged into others' projects"],
+  [D.issuesTotal, 'issues reported upstream'],
+].map(([b, s]) => `<div class="tile"><b>${b}</b><span>${s}</span></div>`).join('');
+
+/* timeline */
+(function () {
+  const months = []; const vals = [];
+  Object.keys(D.cal).forEach(y => D.cal[y].forEach((v, i) => { months.push(`${y}-${String(i + 1).padStart(2, '0')}`); vals.push(v); }));
+  const last = months.indexOf('2026-11'); months.length = last + 1; vals.length = last + 1;
+  const W = 960, L = 34, R = 6, top = 26, ph = 170, H = top + ph + 30, bw = (W - L - R) / months.length, max = Math.max(...vals);
+  const base = top + ph, x = j => L + j * bw;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly GitHub contributions, January 2017 to November 2026">`;
+  D.eras.forEach((e, i) => {
+    const a = months.indexOf(e.from), b = months.indexOf(e.to);
+    if (i % 2 === 0) s += `<rect x="${x(a)}" y="${top - 20}" width="${(b - a + 1) * bw}" height="${ph + 20}" fill="var(--band)"/>`;
+    s += `<text class="era" x="${x(a) + 6}" y="${top - 6}">${esc(e.name)}</text>`;
+  });
+  [0, 100, 200].forEach(v => { const y = base - v / max * ph; s += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="var(--line)" ${v ? 'stroke-dasharray="2 4"' : ''}/><text x="${L - 6}" y="${y + 4}" text-anchor="end">${v}</text>`; });
+  const peak = vals.indexOf(max);
+  vals.forEach((v, j) => {
+    const h = v / max * ph, bx = x(j) + .6, w = Math.max(bw - 1.2, 1);
+    if (v) s += `<path d="M${bx},${base} V${base - h + Math.min(2, h)} Q${bx},${base - h} ${bx + Math.min(2, w / 2)},${base - h} H${bx + w - Math.min(2, w / 2)} Q${bx + w},${base - h} ${bx + w},${base - h + Math.min(2, h)} V${base} Z" fill="var(--accent)"/>`;
+    if (j === peak) s += `<text class="lbl" x="${bx + w / 2}" y="${base - h - 5}" text-anchor="middle">${v}</text>`;
+    s += `<rect class="hit" data-j="${j}" x="${x(j)}" y="${top - 20}" width="${bw}" height="${ph + 20}" fill="transparent"/>`;
+  });
+  Object.keys(D.cal).forEach(y => { const j = months.indexOf(`${y}-01`); if (j >= 0) s += `<text x="${x(j)}" y="${H - 10}">${y}</text>`; });
+  s += '</svg>';
+  const el = $('timeline'), tip = $('tip');
+  el.insertAdjacentHTML('beforeend', s);
+  el.addEventListener('pointermove', e => {
+    const r = e.target.closest('.hit'); if (!r) { tip.classList.remove('on'); return; }
+    const j = +r.dataset.j, box = el.getBoundingClientRect(), rb = r.getBoundingClientRect();
+    tip.textContent = `${fmtMonth(months[j])}: ${vals[j]} contributions`;
+    tip.style.left = Math.min(Math.max(rb.left + rb.width / 2 - box.left, 90), box.width - 90) + 'px';
+    tip.style.top = (rb.top - box.top + 10) + 'px';
+    tip.classList.add('on');
+  });
+  el.addEventListener('pointerleave', () => tip.classList.remove('on'));
+  $('eras').innerHTML = D.eras.map(e => `<div><b>${esc(e.name)}</b><span>${fmtMonth(e.from)} to ${e.to === '2026-11' ? 'now' : fmtMonth(e.to)}</span><p>${esc(e.text)}</p></div>`).join('');
+})();
+
+/* featured */
+$('featured').innerHTML = D.featured.map(b => `
+  <div class="theme">
+    <div class="theme-head"><h3>${esc(D.themes[b.theme].name)}</h3><p>${esc(D.themes[b.theme].desc)}</p></div>
+    <div class="cards">${b.items.map(it => `
+      <article class="card">
+        <h3><a href="${it.url}">${esc(it.n)}</a></h3>
+        <p>${esc(it.text)}</p>
+        <div class="meta">
+          ${it.l ? `<span>${esc(it.l)}</span>` : ''}
+          ${it.s ? `<span>${it.s} star${it.s === 1 ? '' : 's'}${it.f ? `, ${it.f} fork${it.f === 1 ? '' : 's'}` : ''}</span>` : ''}
+          ${it.lines ? `<span>${nf(it.lines)} lines</span>` : ''}
+          <span>${it.c.slice(0, 4)}</span>
+        </div>
+      </article>`).join('')}</div>
+  </div>`).join('');
+
+/* language grid */
+(function () {
+  const max = Math.max(...Object.values(D.grid).flat());
+  let h = `<thead><tr><th>Language</th>${D.years.map(y => `<th>${y}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+  for (const [l, v] of Object.entries(D.grid)) {
+    h += `<tr><td>${esc(l)}</td>${v.map((n, i) => `<td><span class="cell ${n ? '' : 'z'}" style="${n ? `background:color-mix(in srgb, var(--accent) ${Math.round(14 + 66 * n / max)}%, var(--surface))` : ''}" title="${esc(l)}, ${D.years[i]}: ${n} repositories">${n || '·'}</span></td>`).join('')}<td class="num">${v.reduce((a, b) => a + b, 0)}</td></tr>`;
+  }
+  $('lgrid').innerHTML = h + '</tbody>';
+})();
+
+/* beyond */
+$('flykv').innerHTML = [[D.fly.prs, 'pull requests'], [D.fly.reviews, 'PRs reviewed'], [D.fly.forum_posts, 'forum posts']].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join('');
+$('flylink').href = D.fly.url;
+$('bear').innerHTML = Object.entries(D.bear).map(([r, n]) => `<div><a href="https://github.com/${r}">${esc(r)}</a><span class="r">${n} merged PRs</span></div>`).join('');
+$('outside').innerHTML = D.outside.slice().reverse().map(([r, n, t, d]) => `<div><a href="https://github.com/${r}/pull/${n}">${esc(r)} #${n}</a><span class="r">${d.slice(0, 4)}</span><span class="t">${esc(t)}</span></div>`).join('');
+$('issuesub').textContent = `${D.issuesTotal} issues in other people's public projects, most of them bug reports. A selection:`;
+$('issues').innerHTML = D.issues.slice().reverse().map(([r, n, t, d]) => `<div><a href="https://github.com/${r}/issues/${n}">${esc(r)} #${n}</a><span class="r">${d.slice(0, 4)}</span><span class="t">${esc(t)}</span></div>`).join('');
+
+/* repo explorer */
+const st = {q: '', th: '', lang: '', sort: 'new'};
+const thKeys = Object.keys(D.themes).filter(k => D.repos.some(r => r.th === k));
+$('th').innerHTML = '<option value="">All areas</option>' + thKeys.map(k => `<option value="${k}">${esc(D.themes[k].name)}</option>`).join('');
+const langList = [...new Set(D.repos.map(r => r.l).filter(Boolean))].sort();
+$('lang').innerHTML = '<option value="">All languages</option>' + langList.map(l => `<option>${esc(l)}</option>`).join('');
+function renderRepos() {
+  const q = st.q.toLowerCase();
+  let rows = D.repos.filter(r => (!st.th || r.th === st.th) && (!st.lang || r.l === st.lang) && (!q || r.n.toLowerCase().includes(q) || r.d.toLowerCase().includes(q)));
+  rows = rows.slice().sort(st.sort === 'stars' ? (a, b) => b.s - a.s || b.c.localeCompare(a.c) : st.sort === 'old' ? (a, b) => a.c.localeCompare(b.c) : (a, b) => b.c.localeCompare(a.c));
+  $('count').textContent = `${rows.length} of ${D.repos.length}`;
+  $('rows').innerHTML = rows.length ? rows.map(r => `<tr>
+    <td><a href="https://github.com/gwuah/${encodeURIComponent(r.n)}">${esc(r.n)}</a>${r.d ? `<span class="note">${esc(r.d.replace(/:[a-z_]+:\s*/g, ''))}</span>` : ''}</td>
+    <td class="tag">${esc(D.themes[r.th].name)}</td><td class="tag">${esc(r.l || 'none')}</td><td class="num">${r.s}</td><td class="date">${fmtDate(r.c)}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="empty">No repositories match. Clear the search or choose another area.</td></tr>';
+}
+$('q').addEventListener('input', e => { st.q = e.target.value; renderRepos(); });
+$('th').addEventListener('change', e => { st.th = e.target.value; renderRepos(); });
+$('lang').addEventListener('change', e => { st.lang = e.target.value; renderRepos(); });
+$('sort').addEventListener('change', e => { st.sort = e.target.value; renderRepos(); });
+renderRepos();
+</script>
+</body>
+</html>

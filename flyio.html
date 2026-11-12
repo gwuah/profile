@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kwaw · Fly.io contribution record</title>
+<meta name="description" content="Pull requests, reviews and customer support from two years as a platform engineer at Fly.io: blue-green deployments, deploys without WireGuard, and deploy tracing.">
+<meta property="og:title" content="Kwaw · Fly.io contribution record">
+<meta property="og:description" content="Pull requests, reviews and customer support from two years as a platform engineer at Fly.io: blue-green deployments, deploys without WireGuard, and deploy tracing.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232a78d6'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='17' font-weight='700' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a single reading column of sections, summary first, the two explorers (PRs, forum) last. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #fcfcfb;
+  --ink: #12161d;
+  --ink-2: #4a5160;
+  --ink-3: #7a8191;
+  --line: #dfe2e8;
+  --code: #2a78d6;     /* series 1: code (PRs) */
+  --forum: #eb6834;    /* series 2: forum */
+  --code-soft: #e3edfa;
+  --forum-soft: #fbe6dc;
+  --good: #0a7a0a;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #111317; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86; --line: #32343a;
+    --code: #3987e5; --forum: #d95926; --code-soft: #1b2a40; --forum-soft: #3a2218; --good: #4fc04f;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111317; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86; --line: #32343a;
+  --code: #3987e5; --forum: #d95926; --code-soft: #1b2a40; --forum-soft: #3a2218; --good: #4fc04f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--font-body); }
+a { color: inherit; text-decoration-color: var(--ink-3); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--ink); }
+:focus-visible { outline: 2px solid var(--code); outline-offset: 2px; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; display: flex; flex-direction: column; gap: 44px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: .005em; }
+h1 { font-size: 34px; line-height: 1.1; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+p { margin: 0; }
+.lede { color: var(--ink-2); max-width: 66ch; margin-top: 10px; }
+.sub { color: var(--ink-2); max-width: 68ch; margin-top: 4px; font-size: 14px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+header .ids { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); }
+section { display: flex; flex-direction: column; gap: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.tile { background: var(--surface); padding: 14px 16px; }
+.tile b { display: block; font: 500 28px/1.1 var(--font-mono); font-variant-numeric: tabular-nums; }
+.tile span { color: var(--ink-2); font-size: 13px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+.legend { display: flex; gap: 18px; font-size: 13px; color: var(--ink-2); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart text { font: 11px var(--font-mono); fill: var(--ink-3); }
+.chart .lbl { fill: var(--ink-2); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 9px; border-radius: 5px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0; z-index: 2; }
+.tip.on { opacity: 1; }
+.bars { display: flex; flex-direction: column; gap: 4px; }
+.bar { display: grid; grid-template-columns: minmax(150px, 230px) 1fr 74px; gap: 12px; align-items: center; padding: 7px 8px; border-radius: 6px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; }
+.bar:hover, .bar[aria-pressed="true"] { background: var(--code-soft); }
+.bar.static { cursor: default; grid-template-columns: minmax(150px, 330px) 1fr 74px; }
+.bar.static:hover { background: none; }
+.tile b.long { font-size: 19px; line-height: 1.6; }
+.bar.forum:hover, .bar.forum[aria-pressed="true"] { background: var(--forum-soft); }
+.bar .name { font-weight: 500; }
+.bar .desc { display: block; font-size: 12.5px; color: var(--ink-2); font-weight: 400; line-height: 1.35; }
+.bar .track { height: 14px; display: flex; gap: 2px; }
+.bar .fill { height: 100%; background: var(--code); border-radius: 0 4px 4px 0; }
+.bar .fill.rest { background: var(--ink-3); opacity: .45; }
+.bar.forum .fill { background: var(--forum); }
+.bar .val { font: 13px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; color: var(--ink-2); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+.card .span { font: 12.5px var(--font-mono); color: var(--ink-3); }
+.card p { color: var(--ink-2); font-size: 14px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.chip { display: inline-block; font: 12px var(--font-mono); padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); text-decoration: none; white-space: nowrap; color: var(--ink-2); }
+a.chip:hover { border-color: var(--ink-3); color: var(--ink); }
+.chip.code { border-color: var(--code); }
+.chip.forum { border-color: var(--forum); }
+.loop { display: grid; grid-template-columns: 96px 1fr; gap: 4px 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+.loop:first-child { border-top: 0; padding-top: 0; }
+.loop .when { font: 12.5px var(--font-mono); color: var(--ink-3); padding-top: 2px; }
+.loop .what { font-weight: 500; }
+.loop .out { color: var(--ink-2); font-size: 14px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.controls input, .controls select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; }
+.controls input { flex: 1 1 220px; min-width: 0; }
+.controls .count { margin-left: auto; font: 13px var(--font-mono); color: var(--ink-2); }
+.controls button { font: inherit; font-size: 13px; color: var(--ink-2); background: none; border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+.controls button:hover { color: var(--ink); border-color: var(--ink-3); }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; max-height: 640px; overflow-y: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { position: sticky; top: 0; background: var(--surface); text-align: left; font: 500 12px var(--font-body); color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.num, td.date { font: 13px var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-2); }
+td .note { display: block; color: var(--ink-2); font-size: 13px; margin-top: 2px; max-width: 62ch; }
+.state { font: 12px var(--font-mono); white-space: nowrap; }
+.state::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--ink-3); }
+.state.merged::before { background: var(--code); }
+.state.solved { color: var(--good); }
+.state.solved::before { background: var(--good); }
+.empty { padding: 28px; text-align: center; color: var(--ink-2); }
+footer { color: var(--ink-2); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 18px; display: flex; flex-direction: column; gap: 8px; max-width: 76ch; }
+@media (max-width: 560px) {
+  h1 { font-size: 27px; }
+  .bar { grid-template-columns: 1fr 60px; }
+  .bar .track { grid-column: 1 / -1; order: 3; }
+  .loop { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: no-preference) { .bar, .tip { transition: background .12s, opacity .12s; } }
+
+.site-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; font-size: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: -18px; }
+.site-nav .home { font-family: var(--font-display); font-weight: 600; font-size: 16px; text-decoration: none; margin-right: auto; }
+.site-nav a { text-decoration: none; color: var(--ink-2); }
+.site-nav a:hover { color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent, var(--code)); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+</style>
+</head>
+<body>
+<main>
+<nav class="site-nav" aria-label="Site"><a class="home" href="index.html">Kwaw</a><a href="index.html">Overview</a><a href="flyio.html" aria-current="page">Fly.io work</a><a href="https://github.com/gwuah">GitHub</a></nav>
+<header>
+  <h1>Fly.io contribution record</h1>
+  <p class="lede" id="lede"></p>
+  <div class="ids">
+    <span>GitHub <a href="https://github.com/gwuah">gwuah</a></span>
+    <span>Forum <a href="https://community.fly.io/u/kwaw">@kwaw</a></span>
+    <span id="period"></span>
+  </div>
+</header>
+
+<section aria-label="Totals">
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section>
+  <div>
+    <h2>Activity by month</h2>
+    <p class="sub">Pull requests opened and forum posts written, on the same months. Each panel has its own scale.</p>
+  </div>
+  <div class="panel">
+    <div class="legend"><span><i style="background:var(--code)"></i>Pull requests opened</span><span><i style="background:var(--forum)"></i>Forum posts</span></div>
+    <div class="chart" id="timeline"><div class="tip" id="tip"></div></div>
+  </div>
+</section>
+
+<section>
+  <div>
+    <h2>Focus areas in code</h2>
+    <p class="sub">Every pull request sorted into one of nine areas. The solid bar is merged work; the grey end is closed without merging, mostly drafts replaced by a later PR. Select an area to filter the list below.</p>
+  </div>
+  <div class="panel"><div class="bars" id="domains"></div></div>
+</section>
+
+<section>
+  <div>
+    <h2>Four projects</h2>
+    <p class="sub">The longer threads of work, each built over several pull requests.</p>
+  </div>
+  <div class="two" id="signature"></div>
+</section>
+
+<section>
+  <div>
+    <h2>From a customer's report to a fix</h2>
+    <p class="sub">Cases where a forum thread led to a code or docs change, and the answer went back to the person who asked.</p>
+  </div>
+  <div class="panel" id="loops"></div>
+</section>
+
+<section>
+  <div>
+    <h2>Beyond authored pull requests</h2>
+    <p class="sub">Review, triage and the shape of the code itself. Commits and lines are counted from the git history of each repository's main branch, without merge commits.</p>
+  </div>
+  <div class="tiles" id="tiles2"></div>
+  <div class="panel">
+    <h3 style="margin-bottom:10px">Where the flyctl code landed, by lines changed</h3>
+    <div class="bars" id="areas"></div>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>Repository</th><th>What it is</th><th>Commits</th><th>Lines added</th><th>Lines removed</th></tr></thead><tbody id="reporows"></tbody></table></div>
+  <div class="controls">
+    <h3>Pull requests reviewed</h3>
+    <span class="count" id="rcount"></span>
+  </div>
+  <div class="tablewrap" style="max-height:420px"><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Opened</th></tr></thead><tbody id="rrows"></tbody></table></div>
+</section>
+
+<section>
+  <div>
+    <h2>Customer-facing work on the forum</h2>
+    <p class="sub" id="forumsub"></p>
+  </div>
+  <div class="panel"><div class="bars" id="themes"></div></div>
+  <div class="controls">
+    <input id="fq" type="search" placeholder="Search threads" aria-label="Search threads">
+    <select id="fth" aria-label="Theme"></select>
+    <select id="fkind" aria-label="Kind">
+      <option value="">All threads</option><option value="solved">Accepted solutions</option><option value="started">Threads started</option>
+    </select>
+    <span class="count" id="fcount"></span>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>Thread</th><th>Theme</th><th>Posts</th><th>First post</th><th></th></tr></thead><tbody id="frows"></tbody></table></div>
+</section>
+
+<section id="prs">
+  <div>
+    <h2>All pull requests</h2>
+    <p class="sub">Search by title or number, or narrow by area, repository and outcome.</p>
+  </div>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search pull requests" aria-label="Search pull requests">
+    <select id="dsel" aria-label="Area"></select>
+    <select id="rsel" aria-label="Repository"></select>
+    <select id="ssel" aria-label="Outcome"><option value="">Any outcome</option><option value="merged">Merged</option><option value="closed">Closed unmerged</option></select>
+    <button id="reset" type="button">Clear filters</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>PR</th><th>Title</th><th>Area</th><th>Opened</th><th>Outcome</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+
+<footer>
+  <p><strong>Where this comes from.</strong> GitHub's search API for pull requests authored, reviewed and commented on, and issues filed or assigned, for gwuah in the superfly organisation. Commit and line counts come from the git history of the main branches of flyctl, rchab, fly-go and docs since January 2023, without merge commits. Forum: the public activity, summary and accepted-solution listings for @kwaw on community.fly.io. Read on 12 November 2026.</p>
+  <p><strong>What is judgement.</strong> The nine areas, the forum themes and the one-line PR notes were assigned by reading titles and descriptions. The public activity feed lists 118 of the profile's 124 posts; the per-thread counts here use the 118.</p>
+  <p><strong>What is missing.</strong> Work in private repositories, support handled by email, the content of reviews (only which PRs were reviewed), and line counts for the two single-PR repositories (graphql and the OpenTelemetry fork). Line counts include generated files such as go.sum, and the area breakdown covers flyctl only.</p>
+</footer>
+</main>
+
+<script>
+const D = {"prs": [{"r": "flyctl", "n": 1656, "t": "Unmarshal user information into viewer field", "s": "merged", "c": "2023-02-02", "m": "2023-02-02", "k": 1, "d": "E", "note": ""}, {"r": "flyctl", "n": 1704, "t": "appsv2: Update fly status for machines", "s": "closed", "c": "2023-02-13", "m": "2023-02-14", "k": 0, "d": "V", "note": ""}, {"r": "flyctl", "n": 1709, "t": "appsv2: Update fly status for machines (appsv2)", "s": "merged", "c": "2023-02-14", "m": "2023-02-22", "k": 3, "d": "V", "note": ""}, {"r": "flyctl", "n": 1722, "t": "Set default process group for appsV2 machines", "s": "merged", "c": "2023-02-16", "m": "2023-02-16", "k": 0, "d": "V", "note": ""}, {"r": "flyctl", "n": 1744, "t": "add backwards compat for mounts in apps v2", "s": "merged", "c": "2023-02-20", "m": "2023-02-22", "k": 3, "d": "V", "note": ""}, {"r": "flyctl", "n": 1769, "t": "ensure machines are deployed in the selected region", "s": "merged", "c": "2023-02-23", "m": "2023-02-24", "k": 2, "d": "V", "note": ""}, {"r": "flyctl", "n": 1793, "t": "consider dockerfile set in fly.toml when running machines", "s": "merged", "c": "2023-02-27", "m": "2023-03-01", "k": 0, "d": "V", "note": ""}, {"r": "flyctl", "n": 1859, "t": "Extract machines process group from right key", "s": "merged", "c": "2023-03-08", "m": "2023-03-08", "k": 0, "d": "V", "note": ""}, {"r": "flyctl", "n": 1860, "t": "check against all indicators of a machine being 'release' machines'", "s": "merged", "c": "2023-03-08", "m": "2023-03-08", "k": 1, "d": "V", "note": ""}, {"r": "flyctl", "n": 1872, "t": "Properly check if machine has already deployed before redeploying", "s": "closed", "c": "2023-03-09", "m": "2023-03-17", "k": 1, "d": "V", "note": ""}, {"r": "flyctl", "n": 1908, "t": "Rework `fly launch` UX on existing apps", "s": "merged", "c": "2023-03-16", "m": "2023-03-17", "k": 4, "d": "C", "note": ""}, {"r": "docs", "n": 640, "t": "add section that explains how to listen on your private network", "s": "merged", "c": "2023-03-21", "m": "2023-03-21", "k": 0, "d": "X", "note": ""}, {"r": "docs", "n": 641, "t": "change a few words in 6pn conns", "s": "merged", "c": "2023-03-22", "m": "2023-03-22", "k": 0, "d": "X", "note": ""}, {"r": "flyctl", "n": 1942, "t": "remove experimental features not implemented for apps v2", "s": "merged", "c": "2023-03-23", "m": "2023-03-24", "k": 0, "d": "V", "note": ""}, {"r": "flyctl", "n": 1946, "t": "Prevent docker scanner from overriding port set in fly.toml", "s": "merged", "c": "2023-03-23", "m": "2023-03-27", "k": 12, "d": "C", "note": "Stops the Dockerfile scanner from overwriting the port a user set in fly.toml (reported on the forum by a WordPress user)."}, {"r": "flyctl", "n": 1975, "t": "Add process groups to fly.toml on `fly launch`", "s": "closed", "c": "2023-03-30", "m": "2023-04-15", "k": 1, "d": "C", "note": ""}, {"r": "flyctl", "n": 1976, "t": "Show all running services when app has more than 1 machine", "s": "merged", "c": "2023-03-30", "m": "2023-05-09", "k": 5, "d": "V", "note": ""}, {"r": "flyctl", "n": 1988, "t": "handle ctrl-c signals", "s": "closed", "c": "2023-03-31", "m": "2023-03-31", "k": 1, "d": "E", "note": ""}, {"r": "flyctl", "n": 1994, "t": "Fix pre release", "s": "closed", "c": "2023-04-03", "m": "2023-04-03", "k": 2, "d": "T", "note": ""}, {"r": "flyctl", "n": 1996, "t": "Restrict prereleases to prerelease branch", "s": "merged", "c": "2023-04-03", "m": "2023-04-03", "k": 3, "d": "T", "note": ""}, {"r": "docs", "n": 669, "t": "Instruct netcat to actually send udp packets", "s": "merged", "c": "2023-04-13", "m": "2023-04-13", "k": 0, "d": "X", "note": ""}, {"r": "docs", "n": 674, "t": "highlight config update requirement", "s": "merged", "c": "2023-04-14", "m": "2023-04-14", "k": 0, "d": "X", "note": ""}, {"r": "docs", "n": 675, "t": "highlight config update requirement", "s": "closed", "c": "2023-04-14", "m": "2023-04-14", "k": 0, "d": "X", "note": ""}, {"r": "flyctl", "n": 2396, "t": "Revert \"fix guest update on `fly deploy` and `fly launch`\"", "s": "merged", "c": "2023-06-02", "m": "2023-06-02", "k": 0, "d": "D", "note": ""}, {"r": "flyctl", "n": 2451, "t": "Feat/blue green deployments for appsv2", "s": "closed", "c": "2023-06-15", "m": "2023-06-20", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2458, "t": "Feat/appsv2 blue green deployments", "s": "merged", "c": "2023-06-20", "m": "2023-06-20", "k": 0, "d": "B", "note": "Ships blue-green deploys for Apps V2: boot a full set of green machines, health-check them, then cut traffic over and retire the blue set."}, {"r": "flyctl", "n": 2473, "t": "add check section to http_service block", "s": "merged", "c": "2023-06-24", "m": "2023-06-26", "k": 2, "d": "C", "note": "Lets users define health checks inside the http_service block of fly.toml."}, {"r": "docs", "n": 850, "t": "Add docs for http_service checks", "s": "merged", "c": "2023-06-27", "m": "2023-06-27", "k": 0, "d": "X", "note": ""}, {"r": "flyctl", "n": 2495, "t": "Early exit from updateExistingMachines method", "s": "merged", "c": "2023-06-28", "m": "2023-06-28", "k": 0, "d": "D", "note": ""}, {"r": "flyctl", "n": 2505, "t": "fix/bluegreen deployment", "s": "merged", "c": "2023-06-29", "m": "2023-06-29", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2507, "t": "retry less aggresively", "s": "merged", "c": "2023-06-29", "m": "2023-06-29", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2509, "t": "Fix bluegreen deployment logic for setup that have processes without healthchecks", "s": "merged", "c": "2023-06-30", "m": "2023-06-30", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2510, "t": "Use the right strategy when setting secrets", "s": "closed", "c": "2023-06-30", "m": "2023-07-02", "k": 0, "d": "D", "note": ""}, {"r": "flyctl", "n": 2519, "t": "Inject flyctl version into machine metadata", "s": "merged", "c": "2023-07-02", "m": "2023-07-03", "k": 1, "d": "O", "note": ""}, {"r": "flyctl", "n": 2524, "t": "Disable automatic top level check generation for bluegreen deployments", "s": "closed", "c": "2023-07-03", "m": "2024-04-15", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2642, "t": "Fix alignment in help text", "s": "merged", "c": "2023-07-31", "m": "2023-08-01", "k": 1, "d": "E", "note": ""}, {"r": "flyctl", "n": 2647, "t": "Migrate Testflight tests into Preflight", "s": "merged", "c": "2023-08-01", "m": "2023-08-18", "k": 0, "d": "T", "note": "Merges two integration-test suites (Testflight into Preflight) into one."}, {"r": "flyctl", "n": 2747, "t": "remove dns checks from preflights", "s": "merged", "c": "2023-08-29", "m": "2023-08-30", "k": 0, "d": "T", "note": ""}, {"r": "flyctl", "n": 2756, "t": "Add host_dedication_id to flyctl (deploy)", "s": "merged", "c": "2023-08-29", "m": "2023-08-31", "k": 3, "d": "D", "note": ""}, {"r": "flyctl", "n": 2761, "t": "Prevent bluegreen deployments from spamming CI logs", "s": "merged", "c": "2023-08-30", "m": "2023-08-30", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2762, "t": "[bluegreen] don't re-render bluegreen deployment status state hasn't changed", "s": "merged", "c": "2023-08-30", "m": "2023-08-30", "k": 4, "d": "B", "note": ""}, {"r": "flyctl", "n": 2771, "t": "print rollback failure & suggest for a timeout extension", "s": "merged", "c": "2023-08-30", "m": "2023-09-01", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2817, "t": "Validate machine limits before performing b/g deployment", "s": "merged", "c": "2023-09-12", "m": "2023-09-13", "k": 2, "d": "B", "note": "Checks org machine limits before a blue-green deploy so it fails fast instead of stranding half-created machines."}, {"r": "flyctl", "n": 2836, "t": "[bluegreen] detect zombie machines from previous failed deployment.", "s": "closed", "c": "2023-09-19", "m": "2024-02-15", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 2986, "t": "Trace flyctl deploy path", "s": "merged", "c": "2023-11-03", "m": "2023-12-11", "k": 0, "d": "O", "note": "Instruments the fly deploy path with traces, to find where and why deploys fail."}, {"r": "flyctl", "n": 3146, "t": "attach trace-id to sentry events", "s": "merged", "c": "2024-01-02", "m": "2024-01-02", "k": 1, "d": "O", "note": ""}, {"r": "flyctl", "n": 3157, "t": "trace entire fly deployment path", "s": "merged", "c": "2024-01-05", "m": "2024-02-06", "k": 0, "d": "O", "note": "Extends tracing across the whole deployment path, into platform services."}, {"r": "opentelemetry-ruby-contrib", "n": 1, "t": "feat(rack): add middleware config option to allow propagation using otel links", "s": "merged", "c": "2024-01-23", "m": "2024-01-23", "k": 0, "d": "O", "note": "Change to Fly's fork of OpenTelemetry's Rack middleware: link spans instead of parenting them, so long flyctl root spans don't break sampling."}, {"r": "flyctl", "n": 3278, "t": "track gpu and cpu kinds for deployments", "s": "merged", "c": "2024-02-13", "m": "2024-02-13", "k": 1, "d": "O", "note": ""}, {"r": "fly-go", "n": 3, "t": "Add flaps metadata apis & delegate logging to flyctl client", "s": "merged", "c": "2024-02-15", "m": "2024-02-15", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3293, "t": "log on lease acquire/refresh", "s": "merged", "c": "2024-02-15", "m": "2024-02-15", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3295, "t": "[bluegreen] detect & delete zombie machines from failed deployments", "s": "merged", "c": "2024-02-15", "m": "2024-02-15", "k": 1, "d": "B", "note": "Tags green machines as possible zombies via the metadata API and deletes leftovers from a failed deploy before the next one starts."}, {"r": "flyctl", "n": 3301, "t": "fix args for cordon and uncordon", "s": "merged", "c": "2024-02-15", "m": "2024-02-15", "k": 0, "d": "D", "note": ""}, {"r": "flyctl", "n": 3305, "t": "handle gpu metrics tracking", "s": "closed", "c": "2024-02-15", "m": "2024-02-21", "k": 0, "d": "O", "note": ""}, {"r": "rchab", "n": 30, "t": "wireguardless remote deployments", "s": "merged", "c": "2024-02-21", "m": "2024-03-12", "k": 0, "d": "W", "note": "Builder-side half of WireGuard-less deploys. Restructures the builder's Docker proxy (main.go split into auth, dockerd and storage modules), adds a new reverse proxy and enforces HTTPS for all operations. 474 lines added, 506 removed across 7 files."}, {"r": "flyctl", "n": 3314, "t": "wireguardless remote deployments", "s": "merged", "c": "2024-02-21", "m": "2024-03-06", "k": 0, "d": "W", "note": "Adds `--wg=false`: talk to the remote builder over HTTPS and skip the WireGuard tunnel entirely."}, {"r": "flyctl", "n": 3330, "t": "Wg deps before stable", "s": "closed", "c": "2024-02-29", "m": "2024-03-01", "k": 0, "d": "W", "note": ""}, {"r": "flyctl", "n": 3355, "t": "use wg flag in m run command", "s": "merged", "c": "2024-03-09", "m": "2024-03-09", "k": 0, "d": "W", "note": ""}, {"r": "flyctl", "n": 3392, "t": "auto delete and recreate builder for wgless deploys", "s": "merged", "c": "2024-03-21", "m": "2024-03-22", "k": 0, "d": "W", "note": ""}, {"r": "rchab", "n": 34, "t": "add settings endpoint to rchab", "s": "merged", "c": "2024-03-21", "m": "2024-03-21", "k": 0, "d": "W", "note": "Adds a settings endpoint to the builder, so flyctl can tell whether a builder supports WireGuard-less deploys and recreate it if not."}, {"r": "rchab", "n": 35, "t": "echo build tags in CI", "s": "closed", "c": "2024-03-22", "m": "2024-04-15", "k": 0, "d": "T", "note": ""}, {"r": "flyctl", "n": 3419, "t": "auto delete and recreate builder for wgless deploys", "s": "closed", "c": "2024-04-02", "m": "2024-04-02", "k": 0, "d": "W", "note": ""}, {"r": "flyctl", "n": 3437, "t": "Rollback deployment if green machines fail to boot", "s": "merged", "c": "2024-04-08", "m": "2024-04-09", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 3456, "t": "[bluegreen] Improve reliability of bluegreen deployments", "s": "merged", "c": "2024-04-17", "m": "2024-04-18", "k": 0, "d": "B", "note": "Detects apps running several image versions at once and suggests how to unblock them; the PR says this stops apps from piling up hundreds of machines."}, {"r": "flyctl", "n": 3459, "t": "[tracing] change otel exporter from grpc to http", "s": "merged", "c": "2024-04-18", "m": "2024-04-18", "k": 0, "d": "O", "note": ""}, {"r": "fly-go", "n": 40, "t": "Add trace-id to flaps error type", "s": "merged", "c": "2024-04-18", "m": "2024-04-18", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3460, "t": "Log trace-id from flaps error", "s": "merged", "c": "2024-04-18", "m": "2024-04-18", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3461, "t": "enable rollbacks in bluegreen", "s": "merged", "c": "2024-04-18", "m": "2024-04-18", "k": 0, "d": "B", "note": ""}, {"r": "flyctl", "n": 3462, "t": "store app name on all spans", "s": "merged", "c": "2024-04-18", "m": "2024-04-18", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3467, "t": "Only log the trace id if it's valid", "s": "merged", "c": "2024-04-19", "m": "2024-04-20", "k": 0, "d": "O", "note": ""}, {"r": "fly-go", "n": 42, "t": "Use new AddLink method to connect flyctl spans to flaps spans", "s": "merged", "c": "2024-04-20", "m": "2024-04-22", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3482, "t": "Suggest `--wg=false` when users run into wireguard issues", "s": "merged", "c": "2024-04-24", "m": "2024-05-01", "k": 2, "d": "W", "note": "When a deploy hits WireGuard trouble, suggest `--wg=false` to unblock the user."}, {"r": "flyctl", "n": 3483, "t": "update error message for bluegreen unblocking", "s": "merged", "c": "2024-04-24", "m": "2024-04-24", "k": 0, "d": "B", "note": ""}, {"r": "graphql", "n": 6, "t": "feat: set headers on response if supported", "s": "closed", "c": "2024-04-28", "m": "2024-08-28", "k": 0, "d": "O", "note": ""}, {"r": "fly-go", "n": 53, "t": "Add span links to web and return http-headers on call to remote builder", "s": "closed", "c": "2024-04-28", "m": "2024-08-28", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3495, "t": "Track builder regions so we can easily group failures by region", "s": "closed", "c": "2024-04-28", "m": "2024-08-28", "k": 0, "d": "O", "note": ""}, {"r": "flyctl", "n": 3505, "t": "Reduce threshold required to show alternative suggestion", "s": "merged", "c": "2024-05-01", "m": "2024-05-01", "k": 0, "d": "W", "note": ""}, {"r": "flyctl", "n": 3522, "t": "Prevent users from deploying fly tomls with duplicate service definitions", "s": "closed", "c": "2024-05-03", "m": "2024-09-11", "k": 3, "d": "C", "note": ""}, {"r": "flyctl", "n": 3530, "t": "Add testflight test for wireguardless deployments", "s": "merged", "c": "2024-05-07", "m": "2024-05-07", "k": 0, "d": "T", "note": ""}, {"r": "flyctl", "n": 3599, "t": "fix(bluegreen): fix bug preventing rollbacks on failed green machine creations", "s": "merged", "c": "2024-06-05", "m": "2024-06-06", "k": 0, "d": "B", "note": "Fixes a bug where a partially failed green-machine creation skipped the rollback."}, {"r": "flyctl", "n": 3651, "t": "fix: do not run dns checks if the deployment failed", "s": "merged", "c": "2024-06-18", "m": "2024-06-18", "k": 0, "d": "D", "note": ""}, {"r": "flyctl", "n": 3652, "t": "fix: update 'failed to probe' error message handler", "s": "merged", "c": "2024-06-18", "m": "2024-06-20", "k": 0, "d": "E", "note": ""}, {"r": "fly-go", "n": 73, "t": "Add methods to lock and unlock app.", "s": "closed", "c": "2024-06-24", "m": "2024-08-29", "k": 2, "d": "D", "note": ""}, {"r": "flyctl", "n": 3778, "t": "fix error handling and chaining in bluegreen deployments", "s": "merged", "c": "2024-07-25", "m": "2024-07-25", "k": 0, "d": "B", "note": ""}, {"r": "fly-go", "n": 88, "t": "Define type for release metadata", "s": "merged", "c": "2024-07-30", "m": "2024-07-31", "k": 0, "d": "D", "note": ""}, {"r": "flyctl", "n": 3811, "t": "remove platform version from machine list view", "s": "merged", "c": "2024-08-02", "m": "2024-08-08", "k": 0, "d": "E", "note": ""}, {"r": "flyctl", "n": 3817, "t": "fix downtime causing bug during rolling deployments", "s": "merged", "c": "2024-08-03", "m": "2024-08-08", "k": 0, "d": "D", "note": "Fixes downtime during rolling deploys when an app had more stopped than started machines."}, {"r": "flyctl", "n": 3827, "t": "surface idle timeout functionality", "s": "merged", "c": "2024-08-09", "m": "2024-08-09", "k": 0, "d": "C", "note": "Exposes a custom idle timeout for services, which existed in the platform but nowhere in flyctl or the docs."}, {"r": "docs", "n": 1756, "t": "Add idle_timeout http settings", "s": "merged", "c": "2024-08-12", "m": "2024-08-12", "k": 0, "d": "X", "note": ""}, {"r": "flyctl", "n": 3856, "t": "Improve error messages for failed deployments", "s": "merged", "c": "2024-08-15", "m": "2024-08-29", "k": 0, "d": "E", "note": ""}, {"r": "flyctl", "n": 3861, "t": "show proper count of machines to be deleted when using fly machines destroy --force --image", "s": "merged", "c": "2024-08-16", "m": "2024-08-16", "k": 0, "d": "E", "note": ""}, {"r": "flyctl", "n": 3905, "t": "Add library to pull config from remote container images", "s": "merged", "c": "2024-08-28", "m": "2024-09-21", "k": 1, "d": "C", "note": "Library for reading config out of remote OCI images, public or private."}, {"r": "flyctl", "n": 3906, "t": "prevent concurrent deployments", "s": "closed", "c": "2024-08-28", "m": "2024-09-11", "k": 0, "d": "D", "note": "Locks an app during deploy so two deploys can't race each other and hammer the Machines API with lease calls."}, {"r": "fly-go", "n": 103, "t": "add lock/unlock app functionality", "s": "merged", "c": "2024-08-29", "m": "2024-08-29", "k": 0, "d": "D", "note": ""}], "domains": {"B": {"name": "Blue-green deployments", "desc": "A new zero-downtime deploy strategy for Fly Machines, then a year of hardening it: rollbacks, zombie-machine cleanup, limit checks."}, "O": {"name": "Observability & tracing", "desc": "OpenTelemetry tracing across the deploy path, trace IDs on errors and Sentry events, deployment metrics."}, "V": {"name": "Apps V2 migration", "desc": "Fixes that made flyctl work correctly on the new Machines platform during the Nomad-to-Machines migration."}, "W": {"name": "Remote builders without WireGuard", "desc": "Deploys that reach the remote builder over HTTPS instead of a WireGuard tunnel, plus the nudges that drove adoption."}, "D": {"name": "Deploy correctness", "desc": "Rolling-deploy downtime, concurrent-deploy locking, dedicated hosts and other deploy-engine fixes."}, "C": {"name": "Config & fly launch", "desc": "fly.toml features and validation: http_service checks, idle timeouts, ports, process groups, launch UX."}, "E": {"name": "CLI errors & UX", "desc": "Clearer failure messages, correct counts and output, signal handling."}, "T": {"name": "Testing & release", "desc": "Integration-test suites (Preflight, Testflight) and the prerelease pipeline."}, "X": {"name": "Docs", "desc": "Documentation for features shipped and for questions that kept coming up on the forum."}}, "signature": [{"key": "B", "title": "Blue-green deployments", "span": "Jun 2023 – Jul 2024", "text": "Designed and shipped a new deploy strategy for Fly Machines, then spent a year making it dependable: fail-fast limit checks, automatic rollback, cleanup of machines left behind by failed deploys, and quieter CI output. Announced it on the forum and answered the thread's bug reports directly.", "prs": [2458, 2817, 3295, 3437, 3456, 3599], "forum": [13851, 19472]}, {"key": "W", "title": "Deploys without WireGuard", "span": "Feb – May 2024", "text": "Built a second path to the remote builder over HTTPS for users whose WireGuard tunnel was broken, on both sides. In rchab, the builder image, that meant restructuring its Docker proxy: a 590-line main.go split into auth, dockerd and storage modules, a new reverse proxy in front, and HTTPS enforced for every operation. In flyctl: the flag itself, automatic builder recreation, an integration test, and a prompt suggesting the flag when a deploy stalls.", "prs": [30, 34, 3314, 3392, 3482, 3505, 3530], "forum": [19067]}, {"key": "O", "title": "Tracing the deploy path", "span": "Nov 2023 – Apr 2024", "text": "Added OpenTelemetry tracing from the CLI through the platform, so a failed deploy could be followed end to end. Attached trace IDs to Sentry events and API errors, and changed span propagation in Fly's fork of the OpenTelemetry Rack middleware so long CLI sessions didn't wreck sampling.", "prs": [2986, 3157, 3146, 1, 3460, 3459], "forum": []}, {"key": "V", "title": "Apps V2 migration", "span": "Feb – May 2023", "text": "First months on the team: a run of fixes to status output, process groups, mounts, regions and release machines as customers moved from Nomad to Machines.", "prs": [1709, 1722, 1744, 1769, 1793, 1976], "forum": [12622, 13318]}], "loops": [{"topic": 10961, "slug": "flyctl-machine-run-does-not-respect-build-dockerfile-in-config", "post": 3, "report": "`fly machine run` ignored the Dockerfile set in fly.toml", "fix": [1793], "reply": "2023-03-01", "outcome": "Replied that it was fixed in flyctl v0.0.473."}, {"topic": 6274, "slug": "how-to-deploy-wordpress-on-fly", "post": 12, "report": "WordPress deploy broke because the scanner overwrote the configured port", "fix": [1946], "reply": "2023-03-20", "outcome": "Confirmed the bug in the thread; the fix merged a week later."}, {"topic": 8330, "slug": "cannot-connect-to-machines-on-internal-service-port", "post": 6, "report": "Users couldn't reach machines on an internal port", "fix": [640], "reply": "2023-03-22", "outcome": "Wrote a docs section on listening on the private network and linked it in the thread."}, {"topic": 11649, "slug": "flyctl-cannot-find-local-docker-instance", "post": 9, "report": "flyctl couldn't find Docker Desktop's new socket path", "fix": [], "issue": 1939, "reply": "2023-03-22", "outcome": "Filed flyctl issue #1939 from the report and linked it back."}, {"topic": 13851, "slug": "finally-bluegreen-deployments-for-appsv2", "post": 7, "report": "Blue-green deploys failing right after launch", "fix": [2505, 2507], "reply": "2023-06-29", "outcome": "Shipped fixes the day after launch and pointed users to v0.1.44."}, {"topic": 14147, "slug": "http-service-checks-not-working", "post": 3, "report": "[[http_service.checks]] not taking effect", "fix": [2473], "reply": "2023-07-14", "outcome": "Explained the feature had just shipped and needed a current flyctl."}, {"topic": 20914, "slug": "when-a-bluegreen-deploy-fails-i-end-up-with-extra-machines", "post": 11, "report": "Failed blue-green deploys left extra machines behind", "fix": [], "reply": "2024-07-26", "outcome": "Reported the fix in flyctl v0.2.97: rollback now restores the right machine count."}], "topics": [{"id": 21024, "slug": "auth-and-tokens-are-broken", "t": "auth and tokens are broken?", "cat": "Questions / Help", "th": "inc", "posts": [[2, "2024-07-29"]], "solved": null}, {"id": 20952, "slug": "unable-to-deploy-applications", "t": "Unable to deploy applications", "cat": "Other", "th": "inc", "posts": [[3, "2024-07-26"]], "solved": null}, {"id": 20914, "slug": "when-a-bluegreen-deploy-fails-i-end-up-with-extra-machines", "t": "When a bluegreen deploy fails I end up with extra machines", "cat": "Other", "th": "bg", "posts": [[11, "2024-07-26"]], "solved": null}, {"id": 19472, "slug": "improved-bluegreen-deployments", "t": "Improved bluegreen deployments", "cat": "Fresh Produce", "th": "bg", "posts": [[1, "2024-04-25"]], "solved": null}, {"id": 19192, "slug": "faster-bluegreen-deploys", "t": "Faster bluegreen deploys", "cat": "Fresh Produce", "th": "bg", "posts": [[3, "2024-04-24"]], "solved": null}, {"id": 19359, "slug": "error-deploying-rails-app-failed-to-fetch-an-image-or-build-from-source-error-building-failed-to-solve", "t": "Error deploying rails app - failed to fetch an image or build from source", "cat": "General", "th": "bld", "posts": [[12, "2024-04-18"], [9, "2024-04-18"], [7, "2024-04-18"], [5, "2024-04-18"]], "solved": null}, {"id": 19355, "slug": "cant-deploy-due-to-requirements", "t": "Can't deploy due to requirements?", "cat": "Python", "th": "bld", "posts": [[2, "2024-04-18"]], "solved": null}, {"id": 19242, "slug": "metrics-down-502-errors", "t": "Metrics down 502 errors", "cat": "General", "th": "inc", "posts": [[3, "2024-04-12"]], "solved": null}, {"id": 19234, "slug": "yul-region-down-or-app-builder-is-not-starting", "t": "YUL region down or app builder is not starting?", "cat": "General", "th": "bld", "posts": [[3, "2024-04-12"]], "solved": null}, {"id": 19069, "slug": "when-deploy-config-is-change-all-apps-change-port-like-this-and-crash-all-apps", "t": "When Deploy Config is Change (All Apps change port like this, and crash all apps)", "cat": "General", "th": "cfg", "posts": [[2, "2024-04-02"]], "solved": null}, {"id": 19070, "slug": "fly-app-does-not-start-net-http-request-canceled-error-with-http-2-server", "t": "Fly app does not start (\"net/http: request canceled\" error) with http/2 server", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2024-04-02"]], "solved": null}, {"id": 19064, "slug": "apps-are-all-missing", "t": "Apps are all missing", "cat": "Questions / Help", "th": "inc", "posts": [[2, "2024-04-02"]], "solved": null}, {"id": 19067, "slug": "performing-remote-builds-without-wireguard", "t": "Performing remote builds without wireguard", "cat": "Fresh Produce", "th": "bld", "posts": [[1, "2024-04-02"]], "solved": null}, {"id": 18583, "slug": "outbound-ipv4-address-and-third-party-integrations-ip-whitelisting", "t": "Outbound IPv4 address and third party integrations - IP whitelisting", "cat": "Questions / Help", "th": "net", "posts": [[2, "2024-03-09"]], "solved": null}, {"id": 18650, "slug": "error-500-on-build-failed-to-start-remote-builder-heartbeat-server-returned-a-non-200-status-code-500", "t": "Error 500 on build: Failed to start remote builder heartbeat", "cat": "General", "th": "bld", "posts": [[4, "2024-03-09"]], "solved": null}, {"id": 18399, "slug": "acces-service-by-ip", "t": "Acces Service By Ip", "cat": "General", "th": "net", "posts": [[6, "2024-02-29"], [2, "2024-02-25"]], "solved": null}, {"id": 18329, "slug": "fly-deploy-no-such-organization", "t": "fly deploy : no such organization", "cat": "General", "th": "bld", "posts": [[18, "2024-02-23"], [16, "2024-02-23"], [13, "2024-02-22"]], "solved": 16}, {"id": 18379, "slug": "is-using-an-organisation-still-the-recommended-way-of-isolating-environments", "t": "Is using an Organisation still the recommended way of isolating environments", "cat": "General", "th": "cfg", "posts": [[2, "2024-02-23"]], "solved": null}, {"id": 18377, "slug": "virtual-machine-exited-abruptly", "t": "Virtual machine exited abruptly", "cat": "General", "th": "net", "posts": [[4, "2024-02-23"], [2, "2024-02-23"]], "solved": null}, {"id": 18363, "slug": "error-x509-with-flyctl-auth-login", "t": "Error x509 with \"flyctl auth login\"", "cat": "Questions / Help", "th": "cfg", "posts": [[8, "2024-02-23"]], "solved": null}, {"id": 17361, "slug": "machine-downscaled-even-if-a-process-is-running", "t": "Machine downscaled even if a process is running", "cat": "JavaScript", "th": "cfg", "posts": [[2, "2023-12-21"]], "solved": 2}, {"id": 14861, "slug": "why-flyio-create-2-app-machines", "t": "Why flyio create 2 \"app\" machines?", "cat": "General", "th": "cfg", "posts": [[3, "2023-08-16"]], "solved": null}, {"id": 14678, "slug": "error-failed-to-fetch-an-image-or-build-from-source-error-rendering-push-status-stream-received-unexpected-http-status-500-internal-server-error", "t": "Error: failed to fetch an image or build from source: 500 Internal Server Error", "cat": "General", "th": "inc", "posts": [[5, "2023-08-08"]], "solved": null}, {"id": 14163, "slug": "inspecting-a-fly-apps-network-setting", "t": "Inspecting a fly app's --network setting", "cat": "Questions / Help", "th": "net", "posts": [[2, "2023-07-14"]], "solved": 2}, {"id": 14118, "slug": "any-easier-way-to-change-regions-of-machines-in-an-app", "t": "Any easier way to change regions of Machines in an app?", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-07-14"]], "solved": null}, {"id": 14155, "slug": "how-could-i-deal-with-this-issue", "t": "How could I deal with this issue.", "cat": "General", "th": "bld", "posts": [[3, "2023-07-14"], [2, "2023-07-14"]], "solved": 2}, {"id": 14147, "slug": "http-service-checks-not-working", "t": "[[http_service.checks]] not working?", "cat": "General", "th": "cfg", "posts": [[3, "2023-07-14"]], "solved": null}, {"id": 14049, "slug": "what-is-happening-with-flyctl", "t": "What is happening with flyctl?", "cat": "Questions / Help", "th": "bg", "posts": [[16, "2023-07-14"], [14, "2023-07-11"], [13, "2023-07-11"]], "solved": null}, {"id": 13851, "slug": "finally-bluegreen-deployments-for-appsv2", "t": "Finally, BlueGreen Deployments for AppsV2!", "cat": "Fresh Produce", "th": "bg", "posts": [[31, "2023-07-14"], [26, "2023-07-03"], [24, "2023-07-03"], [22, "2023-07-03"], [20, "2023-07-01"], [17, "2023-06-30"], [13, "2023-06-30"], [10, "2023-06-29"], [9, "2023-06-29"], [7, "2023-06-29"], [6, "2023-06-29"], [1, "2023-06-28"]], "solved": null}, {"id": 13949, "slug": "is-fly-io-working", "t": "is fly.io working?", "cat": "Questions / Help", "th": "inc", "posts": [[9, "2023-07-04"]], "solved": null}, {"id": 12421, "slug": "how-to-avoid-downtime-but-with-only-one-continuously-running-machine-on-v2", "t": "How to avoid downtime but with only one continuously running machine on V2?", "cat": "Questions / Help", "th": "bg", "posts": [[4, "2023-06-29"]], "solved": null}, {"id": 13425, "slug": "any-update-on-when-bluegreen-deploy-strategy-will-be-ready", "t": "Any update on when bluegreen deploy strategy will be ready?", "cat": "General", "th": "bg", "posts": [[4, "2023-06-29"], [2, "2023-06-09"]], "solved": null}, {"id": 12997, "slug": "healthcheck-based-routing", "t": "Healthcheck-based Routing", "cat": "Fresh Produce", "th": "cfg", "posts": [[14, "2023-06-27"]], "solved": null}, {"id": 13758, "slug": "no-metrics-on-fly-app", "t": "No Metrics on Fly App", "cat": "Questions / Help", "th": "cfg", "posts": [[4, "2023-06-24"], [2, "2023-06-24"]], "solved": null}, {"id": 13712, "slug": "python-discord-bot-ignores-auto-stop-machines-false-setting", "t": "Python discord bot ignores auto_stop_machines = false setting", "cat": "Questions / Help", "th": "cfg", "posts": [[4, "2023-06-23"], [2, "2023-06-23"]], "solved": 2}, {"id": 13735, "slug": "machines-as-ephemeral-code-playground-backend", "t": "Machines as Ephemeral Code Playground Backend", "cat": "General", "th": "net", "posts": [[8, "2023-06-23"]], "solved": null}, {"id": 13063, "slug": "process-group-aware-internal-dns-route-between-processes-with-ease", "t": "Process group-aware internal DNS: route between processes with ease!", "cat": "Fresh Produce", "th": "net", "posts": [[9, "2023-06-21"], [7, "2023-06-20"]], "solved": null}, {"id": 13647, "slug": "how-to-deploy-app-and-secrets-together", "t": "How to deploy app and secrets together?", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-06-21"]], "solved": null}, {"id": 13614, "slug": "http-services-checks-dont-work-as-expected", "t": "HTTP services/checks don't work as expected", "cat": "General", "th": "cfg", "posts": [[3, "2023-06-19"]], "solved": null}, {"id": 13553, "slug": "machines-in-nrt-region-dead-can-force-remove-them-but-not-create-new-one", "t": "Machines in NRT region dead, can force remove them, but not create new one", "cat": "General", "th": "inc", "posts": [[2, "2023-06-15"]], "solved": 2}, {"id": 13534, "slug": "list-stopped-machines-or-with-a-certain-status-generally-via-api", "t": "List stopped machines (or with a certain status generally) via API", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-06-14"]], "solved": null}, {"id": 13318, "slug": "cant-deploy-unable-to-update-v2-metadata-on-machine", "t": "Can't deploy: unable to update v2 metadata on machine", "cat": "General", "th": "inc", "posts": [[5, "2023-06-07"], [4, "2023-06-06"], [3, "2023-06-05"]], "solved": 5}, {"id": 7921, "slug": "flyctl-update-available-but-it-cannot-update", "t": "flyctl update available, but it cannot update", "cat": "General", "th": "cfg", "posts": [[5, "2023-06-07"]], "solved": null}, {"id": 13389, "slug": "access-outside-internet", "t": "Access outside internet", "cat": "General", "th": "net", "posts": [[2, "2023-06-07"]], "solved": null}, {"id": 13179, "slug": "issues-with-udp-on-machines-appsv2", "t": "Issues with UDP on Machines/AppsV2", "cat": "Questions / Help", "th": "net", "posts": [[11, "2023-06-06"], [9, "2023-06-03"], [7, "2023-06-01"], [5, "2023-05-30"], [3, "2023-05-29"]], "solved": null}, {"id": 12823, "slug": "talk-to-fly-what-are-your-use-cases-for-realtime-machine-applications-events", "t": "[Talk To Fly] What are your use-cases for realtime machine & applications events?", "cat": "The Bike Shed", "th": "res", "posts": [[7, "2023-05-30"], [1, "2023-05-10"]], "solved": null}, {"id": 13146, "slug": "server-misbehaving", "t": "Server misbehaving", "cat": "Questions / Help", "th": "inc", "posts": [[3, "2023-05-27"]], "solved": null}, {"id": 13151, "slug": "min-machines-running-0-not-working-for-simple-test-application", "t": "min_machines_running=0 not working for simple test application", "cat": "General", "th": "cfg", "posts": [[2, "2023-05-27"]], "solved": null}, {"id": 12978, "slug": "migrate-appsv2-postgres-to-another-region", "t": "Migrate appsv2 postgres to another region?", "cat": "General", "th": "cfg", "posts": [[2, "2023-05-19"]], "solved": null}, {"id": 12975, "slug": "oom-issue-even-with-swap-ram-added", "t": "OOM issue even with swap ram added", "cat": "General", "th": "inc", "posts": [[3, "2023-05-19"]], "solved": null}, {"id": 12960, "slug": "warning-the-app-is-listening-on-the-incorrect-address", "t": "WARNING: The app is listening on the incorrect address", "cat": "Phoenix", "th": "net", "posts": [[10, "2023-05-18"], [7, "2023-05-18"]], "solved": null}, {"id": 12956, "slug": "allocating-ipv4-address", "t": "Allocating IPv4 address", "cat": "General", "th": "net", "posts": [[2, "2023-05-18"]], "solved": null}, {"id": 12787, "slug": "lax-error-could-not-make-http-request-to-instance-connection-error-timed-out", "t": "lax [error] could not make HTTP request to instance: connection error: timed out", "cat": "Questions / Help", "th": "net", "posts": [[6, "2023-05-10"]], "solved": null}, {"id": 12770, "slug": "you-have-reached-the-maximum-number-of-machines-for-this-app", "t": "\"You have reached the maximum number of machines for this app\"", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-05-08"]], "solved": null}, {"id": 11984, "slug": "fly-migrate-to-v2-automatic-migration-to-apps-v2", "t": "fly migrate-to-v2 - Automatic migration to Apps V2", "cat": "Fresh Produce", "th": "cfg", "posts": [[32, "2023-05-07"]], "solved": null}, {"id": 12622, "slug": "failed-to-launch-vm-you-have-reached-the-maximum-number-of-machines-for-this-app-after-upgrading-to-apps-v2", "t": "\"failed to launch VM: You have reached the maximum number of machines\" after upgrading to apps V2", "cat": "Questions / Help", "th": "cfg", "posts": [[15, "2023-05-05"], [12, "2023-05-04"], [9, "2023-05-04"], [7, "2023-05-04"], [4, "2023-05-04"]], "solved": null}, {"id": 12692, "slug": "accidentally-leaked-credentials", "t": "Accidentally leaked credentials", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-05-04"]], "solved": 2}, {"id": 9149, "slug": "what-is-the-best-way-to-route-all-my-outgoing-network-requests-via-wiregaurd", "t": "What is the best way to route all my outgoing network requests via wiregaurd", "cat": "Questions / Help", "th": "net", "posts": [[6, "2023-05-02"], [4, "2023-05-01"]], "solved": null}, {"id": 12605, "slug": "mongodb-atlas-ip-addresses", "t": "Mongodb Atlas - IP Addresses", "cat": "Questions / Help", "th": "net", "posts": [[2, "2023-05-01"]], "solved": null}, {"id": 12368, "slug": "max-size-for-fly-replay-header-fly-replay-src-header", "t": "Max size for `fly-replay` header / `fly-replay-src` header?", "cat": "Questions / Help", "th": "net", "posts": [[2, "2023-04-20"]], "solved": null}, {"id": 12350, "slug": "connection-issues-with-redis-cluster-on-fly-io", "t": "Connection Issues with Redis Cluster on Fly.io", "cat": "Questions / Help", "th": "net", "posts": [[2, "2023-04-20"]], "solved": 2}, {"id": 12213, "slug": "pull-failed-retrying", "t": "Pull failed, retrying", "cat": "General", "th": "inc", "posts": [[3, "2023-04-13"]], "solved": null}, {"id": 11959, "slug": "log-shippers-died-on-feb-24th", "t": "log-shippers died on Feb 24th", "cat": "General", "th": "cfg", "posts": [[7, "2023-04-09"], [5, "2023-04-09"]], "solved": null}, {"id": 11723, "slug": "fly-toml-configuration-for-a-very-simple-socket-io-server", "t": "Fly.toml configuration for a very simple Socket.IO server", "cat": "Questions / Help", "th": "net", "posts": [[4, "2023-03-27"], [2, "2023-03-26"]], "solved": null}, {"id": 11710, "slug": "app-cant-connect-tp-postgres-from-cli-on-my-machine-however-its-working-well-from-browser-cli", "t": "App can't connect to postgres from cli on my machine", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-03-26"]], "solved": null}, {"id": 11690, "slug": "how-can-i-force-a-vm-to-stop", "t": "How can I force a VM to stop?", "cat": "Questions / Help", "th": "cfg", "posts": [[2, "2023-03-24"]], "solved": null}, {"id": 11661, "slug": "are-there-api-docs-to-interact-with-fly-io-via-rest", "t": "Are there API docs to interact with fly.io via REST?", "cat": "General", "th": "cfg", "posts": [[2, "2023-03-22"]], "solved": null}, {"id": 11649, "slug": "flyctl-cannot-find-local-docker-instance", "t": "flyctl cannot find local docker instance", "cat": "Other", "th": "bld", "posts": [[9, "2023-03-22"]], "solved": null}, {"id": 8330, "slug": "cannot-connect-to-machines-on-internal-service-port", "t": "Cannot Connect to Machines on internal Service Port", "cat": "Other", "th": "net", "posts": [[6, "2023-03-22"]], "solved": null}, {"id": 11621, "slug": "deploys-never-get-past-build-stage", "t": "Deploys never get past build stage", "cat": "Other", "th": "bld", "posts": [[2, "2023-03-21"]], "solved": null}, {"id": 11532, "slug": "basing-secrets-and-env-variables-from-other-apps", "t": "Basing secrets and env variables from other apps", "cat": "General", "th": "cfg", "posts": [[3, "2023-03-21"]], "solved": null}, {"id": 11609, "slug": "i-apparently-bricked-fly-on-my-pc", "t": "I apparently bricked Fly on my PC", "cat": "Questions / Help", "th": "cfg", "posts": [[18, "2023-03-20"], [14, "2023-03-20"], [7, "2023-03-20"]], "solved": 14}, {"id": 6274, "slug": "how-to-deploy-wordpress-on-fly", "t": "How to Deploy Wordpress on Fly?", "cat": "General", "th": "cfg", "posts": [[12, "2023-03-20"], [9, "2023-03-20"]], "solved": null}, {"id": 4799, "slug": "flyctl-scale-show-does-not-display-max-per-region", "t": "flyctl scale show does not display Max Per Region", "cat": "General", "th": "cfg", "posts": [[4, "2023-03-07"]], "solved": null}, {"id": 10961, "slug": "flyctl-machine-run-does-not-respect-build-dockerfile-in-config", "t": "flyctl machine run does not respect [build]dockerfile in config", "cat": "General", "th": "cfg", "posts": [[3, "2023-03-01"]], "solved": null}], "themes": {"bg": "Blue-green & deploy strategy", "net": "Networking & routing", "cfg": "Config, machines & CLI", "bld": "Builders & failed deploys", "inc": "Incidents & regional issues", "res": "Product research"}, "forum": {"post_count": 124, "topic_count": 4, "solved": 10, "likes_received": 86, "days_visited": 246, "posts_read": 5872, "joined": "2023-01-31", "last_posted": "2024-07-29"}, "code": {"commits": 90, "add": 5082, "del": 1596, "areas": [["Deploy command (internal/command/deploy)", 1620], ["Tests (test/, *_test.go)", 1284], ["Platform API clients (api/, flaps/, gql/)", 1042], ["Image builds (internal/build)", 655], ["Other flyctl code", 513], ["Dependencies (go.mod, go.sum)", 426], ["Container image config", 298], ["Tracing and metrics (internal/tracing, internal/metrics)", 271], ["Launch and scanners", 253], ["Machine commands (internal/command/machine, internal/machine)", 166], ["App config (internal/appconfig)", 89], ["CI and release scripts", 61]], "repos": [["flyctl", 90, 5082, 1596], ["rchab", 6, 583, 600], ["fly-go", 5, 207, 15], ["docs", 6, 54, 6]]}, "reviewed": [["fly-go", 90, "Allow linking a BuildID to a specific release", "billyb2", "2024-08-08", true], ["flyctl", 3798, "Send release metadata while updating the release", "bemesa21", "2024-07-29", true], ["flyctl", 3783, "add better output for private networking", "fliepeltje", "2024-07-26", true], ["fly-go", 86, "depot web schema", "billyb2", "2024-07-24", true], ["flyctl", 3736, "switch http -> https when getting builder settings", "billyb2", "2024-07-15", false], ["flyctl", 3677, "Sentry:capture more flaps error metadata", "rugwirobaker", "2024-06-26", true], ["flyctl", 3649, "Export env vars logging Erlang crash dumps", "matthewlehner", "2024-06-18", true], ["flyctl", 3516, "Add the --http-failover flag for remote Docker builders", "billyb2", "2024-05-02", true], ["graphql", 5, "Return the response in the error, when http response is anything other than 200 OK.", "tvdfly", "2024-04-26", false], ["flyctl", 3481, "Lower the Postgres default disk size to 1 GB", "clouvet", "2024-04-24", true], ["fly-go", 43, "Add worker status fields for Machines and volumes", "matttpt", "2024-04-22", true], ["flyctl", 3464, "Start tracing fly launch", "rugwirobaker", "2024-04-18", true], ["flyctl", 3445, "Bump github.com/superfly/fly-go", "pborzenkov", "2024-04-12", true], ["rchab", 33, "Change vagrant IP", "benwaffle", "2024-03-20", true], ["fly-go", 17, "Rightly (un)set GPU fields on MachineGuest.SetSize()", "dangra", "2024-03-15", true], ["rchab", 32, "Build overlaybd images", "benwaffle", "2024-03-14", true], ["flyctl", 3335, "Parallelize deletion of old machines in blue/green deploy", "benbjohnson", "2024-02-29", true], ["flyctl", 3298, "Fix `cannot apply host to transport: *otelhttp.Transport`", "kzys", "2024-02-15", true], ["flyctl", 3297, "Cordon and gracefully shutdown old machines during blue-green deploy", "pborzenkov", "2024-02-15", true], ["fly-go", 4, "Allow to pass a lease to cordon/uncordon calls", "pborzenkov", "2024-02-15", true], ["flyctl", 3206, "add tigris_bucket key in statics", "lillianberryfly", "2024-01-24", true], ["flyctl", 3152, "switch to using otelhttp module for tracing http requests", "jipperinbham", "2024-01-04", true], ["flyctl", 3123, "Bump opentelemetry to 1.21.0", "dangra", "2023-12-12", true], ["flyctl", 2991, "Fix SIGINT on Deployments", "billyb2", "2023-11-06", true], ["flyctl", 2941, "GHA Fixes", "michaeldwan", "2023-10-20", true], ["flyctl", 2767, "Replace golang.org/x/exp/slices with slices in the stdlib", "michaeldwan", "2023-08-30", true], ["flyctl", 2753, "More test fixes", "michaeldwan", "2023-08-29", true], ["flyctl", 2733, "Better help", "michaeldwan", "2023-08-25", true], ["flyctl", 2693, "`fly deploy --strategy=bluegreen`: don't wait for standby machines", "matttpt", "2023-08-14", true], ["flyctl", 2666, "Prevent bluegreen deployments from spamming CI logs", "magJ", "2023-08-08", false], ["flyctl", 2528, "Test flyctl version using buildinfo information and the meta key by i…", "dangra", "2023-07-04", true], ["flyctl", 2503, "Add timing metrics for flaps calls", "billyb2", "2023-06-29", true], ["docs", 840, "Update docs for bluegreen deploy strategy in V2 apps", "andie787", "2023-06-22", true], ["flyctl", 2391, "fix guest update on `fly deploy` and `fly launch`", "lubien", "2023-06-01", true], ["flyctl", 2345, "Change wrong address:port warning a bit", "pborzenkov", "2023-05-25", true], ["flyctl", 2132, "api/client: improve constructor configurability", "tychoish", "2023-04-20", true], ["flyctl", 2080, "Fix timeout handling in WaitFor*", "pborzenkov", "2023-04-14", true], ["flyctl", 2060, "`deploy`: hint to users when the release command machine exhausts their machine limit", "alichay", "2023-04-12", true], ["flyctl", 1977, "`migrate-to-v2`: add rollback support", "alichay", "2023-03-30", true], ["flyctl", 1960, "Fix agent deadlock when all wireguard peers are deleted", "benwaffle", "2023-03-28", true], ["flyctl", 1959, "Pass LOG_LEVEL through to wireguard client", "benwaffle", "2023-03-27", true], ["flyctl", 1958, "Allow connection attempts over agent tunnels to be cancelled", "matttpt", "2023-03-27", true], ["flyctl", 1932, "Fix crashes when calling `appconfig.FromRemoteApp`", "matttpt", "2023-03-20", true], ["flyctl", 1924, "Disable autostart by default for PG apps", "billyb2", "2023-03-17", true], ["flyctl", 1922, "Lint api module looking for blocked deps", "dangra", "2023-03-17", true], ["flyctl", 1869, "Port \"fly scale\" to internal/command/scale", "dangra", "2023-03-09", true], ["flyctl", 1856, "Process Groups for Apps V2! 🎉", "alichay", "2023-03-08", true], ["flyctl", 1855, "Port 'fly config' to internal/command/config", "dangra", "2023-03-08", true], ["flyctl", 1853, "Update flaps client to use api.machines.dev by default", "tvdfly", "2023-03-07", true], ["flyctl", 1797, "Remove confusing msg from fly deploy", "tvdfly", "2023-03-01", true], ["flyctl", 1765, "Support [[mounts]] in fly.toml", "dangra", "2023-02-23", true], ["flyctl", 1739, "Added patch for services.internal_port", "billyb2", "2023-02-20", true]], "issues": [[3328, "Parallelize deletion of old machines in bluegreen deployments", "closed", "2024-02-29"], [1993, "Sandbox new prereleases to `prerelease` branch.", "closed", "2023-04-03"], [1939, "Look for docker socket in ~/.docker/run/docker.sock", "open", "2023-03-22"], [1721, "Default process group isn't set for appv2 apps", "closed", "2023-02-16"]], "assigned": [[1838, "Apps v2 -`fly services list` doesn't show services after cloning a Machine"], [1829, "Apps v2 - Default `fly.toml` has non-empty `experimental` section"], [1816, "Apps V2 - `fly m status` doesn't show the machine's process group"], [1770, "fly machine run doesn't respect `[build]` block in `fly.toml`"], [1741, "flyctl does not support [mount] configuration"], [1721, "Default process group isn't set for appv2 apps"], [1640, "Apps v2 - `fly launch` doesn't deploy first Machine in selected region"], [1633, "Apps v2 - A lot of overlap between `fly status` and `fly m list`"], [1624, "Apps v2 - (pre-4) `fly launch --internal-port` doesn't affect `internal_port`?"], [1623, "`fly launch` thinks `App is not running` and deploys over a running app"], [1621, "Apps v2: should `fly.toml` be generated with `[experimental]` or `grace_period` at launch?"], [1608, "Apps v2: Release command should attempt PRIMARY_REGION env var"], [1564, "Apps v2: fly status"]], "commented": {"issues": 10, "prs": 56}, "fixes": {"1709": [1564], "1722": [1721], "1744": [1741], "1769": [1640], "1793": [1770], "1859": [1816], "1908": [1623], "1942": [1621, 1829], "1946": [1900], "1976": [1838], "1656": [1649]}};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmtDate = d => { const [y,m,dd] = d.split('-'); return `${+dd} ${MON[m-1]} ${y}`; };
+const fmtMonth = k => { const [y,m] = k.split('-'); return `${MON[m-1]} ${y}`; };
+const prUrl = p => `https://github.com/superfly/${p.r}/pull/${p.n}`;
+const topicUrl = (t, post) => `https://community.fly.io/t/${t.slug}/${t.id}` + (post && post > 1 ? `/${post}` : '');
+const prByNum = n => D.prs.find(p => p.n === n && (n !== 1 || p.r === 'opentelemetry-ruby-contrib') && (n !== 30 || p.r === 'rchab')) || D.prs.find(p => p.n === n);
+const topicById = id => D.topics.find(t => t.id === id);
+const days = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
+
+/* ---------- totals ---------- */
+const merged = D.prs.filter(p => p.s === 'merged');
+const repos = [...new Set(D.prs.map(p => p.r))];
+const sameDay = merged.filter(p => days(p.c, p.m) <= 1).length;
+const allPosts = D.topics.flatMap(t => t.posts.map(([n, d]) => ({t, n, d})));
+const first = D.prs[0].c, last = D.prs[D.prs.length - 1].c;
+$('lede').textContent = `${D.prs.length} pull requests across ${repos.length} public Fly.io repositories and ${D.forum.post_count} posts on the community forum, most of them answers to customers who were stuck. The work centres on how apps get deployed: the deploy strategies in flyctl, the builders behind them, and the tracing needed to see why a deploy failed.`;
+$('period').textContent = `${fmtDate(first)} to ${fmtDate(last)}`;
+$('tiles').innerHTML = [
+  [D.prs.length, 'pull requests opened'],
+  [merged.length, 'merged'],
+  [repos.length, 'repositories'],
+  [`${Math.round(100 * sameDay / merged.length)}%`, 'of merged PRs landed within a day'],
+  [D.forum.post_count, 'forum posts'],
+  [D.forum.solved, 'accepted solutions'],
+].map(([b, s]) => `<div class="tile"><b>${b}</b><span>${s}</span></div>`).join('');
+
+/* ---------- timeline (two panels, shared months) ---------- */
+(function timeline() {
+  const months = []; let y = 2023, m = 2;
+  while (y < 2024 || m <= 8) { months.push(`${y}-${String(m).padStart(2, '0')}`); if (++m > 12) { m = 1; y++; } }
+  const count = (arr, key) => months.map(k => arr.filter(x => x[key].startsWith(k)).length);
+  const series = [
+    {name: 'pull requests opened', color: 'var(--code)', vals: count(D.prs, 'c')},
+    {name: 'forum posts', color: 'var(--forum)', vals: count(allPosts, 'd')},
+  ];
+  const W = 960, L = 34, R = 8, ph = 112, gap = 30, top = 14, bw = (W - L - R) / months.length;
+  const H = top + ph * 2 + gap + 34;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly pull requests and forum posts, February 2023 to August 2024">`;
+  series.forEach((se, i) => {
+    const y0 = top + i * (ph + gap), max = Math.max(...se.vals), base = y0 + ph;
+    const peak = se.vals.indexOf(max);
+    s += `<line x1="${L}" x2="${W - R}" y1="${y0}" y2="${y0}" stroke="var(--line)" stroke-dasharray="2 4"/>`;
+    s += `<line x1="${L}" x2="${W - R}" y1="${base}" y2="${base}" stroke="var(--line)"/>`;
+    s += `<text x="${L - 6}" y="${y0 + 4}" text-anchor="end">${max}</text><text x="${L - 6}" y="${base + 4}" text-anchor="end">0</text>`;
+    se.vals.forEach((v, j) => {
+      const h = v / max * ph, x = L + j * bw + 2, w = bw - 4;
+      if (v) s += `<path d="M${x},${base} V${base - h + Math.min(4, h)} Q${x},${base - h} ${x + 4},${base - h} H${x + w - 4} Q${x + w},${base - h} ${x + w},${base - h + Math.min(4, h)} V${base} Z" fill="${se.color}"/>`;
+      if (j === peak) s += `<text class="lbl" x="${x + w / 2}" y="${base - h - 5}" text-anchor="middle">${v}</text>`;
+      s += `<rect class="hit" data-i="${i}" data-j="${j}" x="${L + j * bw}" y="${y0}" width="${bw}" height="${ph}" fill="transparent"/>`;
+    });
+  });
+  months.forEach((k, j) => {
+    const [yy, mm] = k.split('-');
+    if (mm === '02' && yy === '2023' || mm === '01' || (+mm) % 3 === 1 || j === months.length - 1)
+      s += `<text x="${L + j * bw + bw / 2}" y="${H - 14}" text-anchor="middle">${MON[mm - 1]}${mm === '01' || j === 0 ? " '" + yy.slice(2) : ''}</text>`;
+  });
+  s += '</svg>';
+  const el = $('timeline'), tip = $('tip');
+  el.insertAdjacentHTML('beforeend', s);
+  el.addEventListener('pointermove', e => {
+    const r = e.target.closest('.hit'); if (!r) { tip.classList.remove('on'); return; }
+    const i = +r.dataset.i, j = +r.dataset.j, box = el.getBoundingClientRect(), rb = r.getBoundingClientRect();
+    tip.textContent = `${fmtMonth(months[j])}: ${series[i].vals[j]} ${series[i].name}`;
+    tip.style.left = Math.min(Math.max(rb.left + rb.width / 2 - box.left, 90), box.width - 90) + 'px';
+    tip.style.top = (rb.top - box.top - 4) + 'px';
+    tip.classList.add('on');
+  });
+  el.addEventListener('pointerleave', () => tip.classList.remove('on'));
+})();
+
+/* ---------- focus areas ---------- */
+const state = {q: '', d: '', r: '', s: ''};
+const domStats = Object.keys(D.domains).map(k => {
+  const all = D.prs.filter(p => p.d === k);
+  return {k, ...D.domains[k], total: all.length, merged: all.filter(p => p.s === 'merged').length};
+}).sort((a, b) => b.total - a.total || b.merged - a.merged);
+const dmax = Math.max(...domStats.map(d => d.total));
+function renderDomains() {
+  $('domains').innerHTML = domStats.map(d => `
+    <button class="bar" type="button" data-k="${d.k}" aria-pressed="${state.d === d.k}">
+      <span><span class="name">${esc(d.name)}</span><span class="desc">${esc(d.desc)}</span></span>
+      <span class="track"><span class="fill" style="width:${100 * d.merged / dmax}%"></span>${d.total > d.merged ? `<span class="fill rest" style="width:${100 * (d.total - d.merged) / dmax}%"></span>` : ''}</span>
+      <span class="val">${d.merged} of ${d.total}</span>
+    </button>`).join('');
+}
+$('domains').addEventListener('click', e => {
+  const b = e.target.closest('.bar'); if (!b) return;
+  state.d = state.d === b.dataset.k ? '' : b.dataset.k; $('dsel').value = state.d;
+  renderDomains(); renderPRs();
+  if (state.d) $('prs').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+});
+
+/* ---------- signature projects ---------- */
+$('signature').innerHTML = D.signature.map(s => `
+  <article class="card">
+    <span class="span">${esc(s.span)}</span>
+    <h3>${esc(s.title)}</h3>
+    <p>${esc(s.text)}</p>
+    <div class="links">
+      ${s.prs.map(n => { const p = prByNum(n); return `<a class="chip code" href="${prUrl(p)}" title="${esc(p.t)}">${p.r === 'flyctl' ? '' : esc(p.r) + ' '}#${p.n}</a>`; }).join('')}
+      ${s.forum.map(id => { const t = topicById(id); return `<a class="chip forum" href="${topicUrl(t)}" title="${esc(t.t)}">forum: ${esc(t.t.length > 30 ? t.t.slice(0, 29) + '…' : t.t)}</a>`; }).join('')}
+    </div>
+  </article>`).join('');
+
+/* ---------- report -> fix loops ---------- */
+$('loops').innerHTML = D.loops.map(l => `
+  <div class="loop">
+    <span class="when">${fmtDate(l.reply)}</span>
+    <div>
+      <div class="what">${esc(l.report)}</div>
+      <div class="out">${esc(l.outcome)}</div>
+      <div class="links">
+        <a class="chip forum" href="https://community.fly.io/t/${l.slug}/${l.topic}/${l.post}">forum reply</a>
+        ${l.fix.map(n => { const p = prByNum(n); return `<a class="chip code" href="${prUrl(p)}" title="${esc(p.t)}">${p.r === 'flyctl' ? '' : esc(p.r) + ' '}#${p.n}</a>`; }).join('')}
+        ${l.issue ? `<a class="chip code" href="https://github.com/superfly/flyctl/issues/${l.issue}">issue #${l.issue}</a>` : ''}
+      </div>
+    </div>
+  </div>`).join('');
+
+/* ---------- beyond authored PRs ---------- */
+const nf = n => n.toLocaleString('en-US');
+$('tiles2').innerHTML = [
+  [D.reviewed.length, "teammates' pull requests reviewed"],
+  [D.commented.issues + D.commented.prs, "other people's issues and PRs commented on"],
+  [D.assigned.length, 'assigned issues, all now closed'],
+  [D.issues.length, 'issues filed'],
+  [D.code.repos.reduce((a, r) => a + r[1], 0), 'commits on main branches'],
+  [`+${nf(D.code.repos.reduce((a, r) => a + r[2], 0))} / -${nf(D.code.repos.reduce((a, r) => a + r[3], 0))}`, 'lines added / removed, four repositories'],
+].map(([b, s]) => `<div class="tile"><b class="${String(b).length > 8 ? 'long' : ''}">${b}</b><span>${s}</span></div>`).join('');
+const amax = Math.max(...D.code.areas.map(a => a[1]));
+$('areas').innerHTML = D.code.areas.map(([name, v]) => `
+  <div class="bar static"><span>${esc(name)}</span>
+  <span class="track"><span class="fill" style="width:${100 * v / amax}%"></span></span>
+  <span class="val">${nf(v)}</span></div>`).join('');
+const REPO_DESC = {flyctl: 'The Fly.io command-line tool', rchab: 'The remote builder image that runs Docker builds for deploys', 'fly-go': 'Go client library for the Fly.io platform APIs', docs: 'Public documentation'};
+$('reporows').innerHTML = D.code.repos.map(([r, c, a, x]) => `<tr><td><a href="https://github.com/superfly/${r}/commits?author=gwuah">${esc(r)}</a></td><td>${esc(REPO_DESC[r])}</td><td class="num">${c}</td><td class="num">+${nf(a)}</td><td class="num">-${nf(x)}</td></tr>`).join('');
+$('rcount').textContent = `${D.reviewed.length} PRs, ${D.reviewed.filter(r => r[5]).length} merged`;
+$('rrows').innerHTML = D.reviewed.map(([r, n, t, a, d]) => `<tr><td class="num"><a href="https://github.com/superfly/${r}/pull/${n}">${r === 'flyctl' ? '' : esc(r) + ' '}#${n}</a></td><td>${esc(t)}</td><td class="num">${esc(a)}</td><td class="date">${fmtDate(d)}</td></tr>`).join('');
+
+/* ---------- forum ---------- */
+const fstate = {q: '', th: '', kind: ''};
+const started = t => t.posts.some(([n]) => n === 1);
+const replies = allPosts.filter(p => p.n !== 1).length;
+$('forumsub').textContent = `${D.forum.post_count} posts between ${fmtDate(D.forum.joined)} and ${fmtDate(D.forum.last_posted)}: ${D.forum.topic_count} threads started and the rest replies, spread over ${D.topics.length} threads. ${D.forum.solved} replies were marked as the accepted solution and the posts drew ${D.forum.likes_received} likes. Select a theme to filter the threads.`;
+const thStats = Object.keys(D.themes).map(k => {
+  const ts = D.topics.filter(t => t.th === k);
+  return {k, name: D.themes[k], threads: ts.length, posts: ts.reduce((a, t) => a + t.posts.length, 0)};
+}).sort((a, b) => b.posts - a.posts);
+const tmax = Math.max(...thStats.map(t => t.posts));
+function renderThemes() {
+  $('themes').innerHTML = thStats.map(t => `
+    <button class="bar forum" type="button" data-k="${t.k}" aria-pressed="${fstate.th === t.k}">
+      <span class="name">${esc(t.name)}</span>
+      <span class="track"><span class="fill" style="width:${100 * t.posts / tmax}%"></span></span>
+      <span class="val">${t.posts} in ${t.threads}</span>
+    </button>`).join('');
+}
+$('themes').addEventListener('click', e => {
+  const b = e.target.closest('.bar'); if (!b) return;
+  fstate.th = fstate.th === b.dataset.k ? '' : b.dataset.k; $('fth').value = fstate.th; renderThemes(); renderForum();
+});
+$('fth').innerHTML = '<option value="">All themes</option>' + thStats.map(t => `<option value="${t.k}">${esc(t.name)}</option>`).join('');
+function renderForum() {
+  const q = fstate.q.toLowerCase();
+  const rows = D.topics.filter(t => (!fstate.th || t.th === fstate.th) && (!q || t.t.toLowerCase().includes(q))
+    && (!fstate.kind || (fstate.kind === 'solved' ? t.solved : started(t))));
+  $('fcount').textContent = `${rows.length} of ${D.topics.length} threads`;
+  $('frows').innerHTML = rows.length ? rows.map(t => {
+    const firstPost = t.posts[t.posts.length - 1];
+    return `<tr><td><a href="${topicUrl(t, t.solved || firstPost[0])}">${esc(t.t)}</a><span class="note">${esc(t.cat)}</span></td>
+      <td>${esc(D.themes[t.th])}</td><td class="num">${t.posts.length}</td><td class="date">${fmtDate(firstPost[1])}</td>
+      <td>${t.solved ? '<span class="state solved">accepted solution</span>' : started(t) ? '<span class="state">started thread</span>' : ''}</td></tr>`;
+  }).join('') : '<tr><td colspan="5" class="empty">No threads match. Clear the search or pick another theme.</td></tr>';
+}
+$('fq').addEventListener('input', e => { fstate.q = e.target.value; renderForum(); });
+$('fth').addEventListener('change', e => { fstate.th = e.target.value; renderThemes(); renderForum(); });
+$('fkind').addEventListener('change', e => { fstate.kind = e.target.value; renderForum(); });
+
+/* ---------- PR explorer ---------- */
+$('dsel').innerHTML = '<option value="">All areas</option>' + domStats.map(d => `<option value="${d.k}">${esc(d.name)}</option>`).join('');
+$('rsel').innerHTML = '<option value="">All repositories</option>' + repos.map(r => `<option>${esc(r)}</option>`).join('');
+function renderPRs() {
+  const q = state.q.toLowerCase().replace(/^#/, '');
+  const rows = D.prs.filter(p => (!state.d || p.d === state.d) && (!state.r || p.r === state.r) && (!state.s || p.s === state.s)
+    && (!q || p.t.toLowerCase().includes(q) || String(p.n).includes(q) || p.note.toLowerCase().includes(q))).slice().reverse();
+  $('count').textContent = `${rows.length} of ${D.prs.length}`;
+  $('rows').innerHTML = rows.length ? rows.map(p => {
+    const dd = days(p.c, p.m);
+    const out = p.s === 'merged' ? `merged ${dd === 0 ? 'same day' : 'in ' + dd + (dd === 1 ? ' day' : ' days')}` : 'closed unmerged';
+    return `<tr><td class="num"><a href="${prUrl(p)}">${p.r === 'flyctl' ? '' : esc(p.r) + ' '}#${p.n}</a></td>
+      <td>${esc(p.t)}${p.note ? `<span class="note">${esc(p.note)}</span>` : ''}${p.r === 'flyctl' && D.fixes[p.n] ? `<span class="links">${D.fixes[p.n].map(i => `<a class="chip" href="https://github.com/superfly/flyctl/issues/${i}">fixes issue #${i}</a>`).join('')}</span>` : ''}</td>
+      <td>${esc(D.domains[p.d].name)}</td><td class="date">${fmtDate(p.c)}</td>
+      <td><span class="state ${p.s}">${out}</span></td></tr>`;
+  }).join('') : '<tr><td colspan="5" class="empty">No pull requests match. Clear the filters to see all of them.</td></tr>';
+}
+$('q').addEventListener('input', e => { state.q = e.target.value; renderPRs(); });
+$('dsel').addEventListener('change', e => { state.d = e.target.value; renderDomains(); renderPRs(); });
+$('rsel').addEventListener('change', e => { state.r = e.target.value; renderPRs(); });
+$('ssel').addEventListener('change', e => { state.s = e.target.value; renderPRs(); });
+$('reset').addEventListener('click', () => { Object.assign(state, {q: '', d: '', r: '', s: ''}); $('q').value = ''; $('dsel').value = ''; $('rsel').value = ''; $('ssel').value = ''; renderDomains(); renderPRs(); });
+
+renderDomains(); renderThemes(); renderForum(); renderPRs();
+</script>
+</body>
+</html>
