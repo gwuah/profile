@@ -168,52 +168,6 @@ footer { color: var(--ink-2); font-size: 13.5px; border-top: 1px solid var(--lin
   <div class="panel grid-wrap"><table class="lgrid" id="lgrid"></table></div>
 </section>
 
-<section>
-  <div>
-    <h2>Beyond my own repositories</h2>
-    <p class="sub">Work in organisations and other people's projects.</p>
-  </div>
-  <div class="two">
-    <div class="box">
-      <h3>Fly.io, 2023 to 2024</h3>
-      <p>Platform engineer on flyctl, the Fly.io command-line tool, and its remote builders: blue-green deployments, deploys without WireGuard, and OpenTelemetry tracing across the deploy path. I also answered customers on the community forum.</p>
-      <div class="kv" id="flykv"></div>
-      <a class="btn" id="flylink" href="#">Open the full Fly.io record</a>
-    </div>
-    <div class="box">
-      <h3>bearsignals, 2026</h3>
-      <p>My own organisation. Two Go tools for running parallel development environments, one per git worktree, built for working alongside coding agents.</p>
-      <div class="list" id="bear"></div>
-    </div>
-  </div>
-  <div class="two">
-    <div class="box">
-      <h3>Merged into other people's projects</h3>
-      <div class="list" id="outside"></div>
-    </div>
-    <div class="box">
-      <h3>Issues reported upstream</h3>
-      <p id="issuesub"></p>
-      <div class="list" id="issues"></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div>
-    <h2>All public repositories</h2>
-    <p class="sub">Every public repository I own, excluding forks. Search by name or description, or filter by area and language.</p>
-  </div>
-  <div class="controls">
-    <input id="q" type="search" placeholder="Search repositories" aria-label="Search repositories">
-    <select id="th" aria-label="Area"></select>
-    <select id="lang" aria-label="Language"></select>
-    <select id="sort" aria-label="Sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="stars">Most stars</option></select>
-    <span class="count" id="count"></span>
-  </div>
-  <div class="tablewrap"><table><thead><tr><th>Repository</th><th>Area</th><th>Language</th><th>Stars</th><th>Created</th></tr></thead><tbody id="rows"></tbody></table></div>
-</section>
-
 <footer>
   <p><strong>How this was made.</strong> Compiled in November 2026 from GitHub's public API, my profile and contribution calendar, and the READMEs and code of my public repositories. The four periods, the areas and the project summaries are editorial.</p>
   <p><strong>What is not included.</strong> Private repositories, forks and work in private organisations. The contribution calendar is GitHub's own count and may include private contributions, which GitHub shows without detail.</p>
@@ -307,35 +261,6 @@ $('featured').innerHTML = D.featured.map(b => `
   $('lgrid').innerHTML = h + '</tbody>';
 })();
 
-/* beyond */
-$('flykv').innerHTML = [[D.fly.prs, 'pull requests'], [D.fly.reviews, 'PRs reviewed'], [D.fly.forum_posts, 'forum posts']].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join('');
-$('flylink').href = D.fly.url;
-$('bear').innerHTML = Object.entries(D.bear).map(([r, n]) => `<div><a href="https://github.com/${r}">${esc(r)}</a><span class="r">${n} merged PRs</span></div>`).join('');
-$('outside').innerHTML = D.outside.slice().reverse().map(([r, n, t, d]) => `<div><a href="https://github.com/${r}/pull/${n}">${esc(r)} #${n}</a><span class="r">${d.slice(0, 4)}</span><span class="t">${esc(t)}</span></div>`).join('');
-$('issuesub').textContent = `${D.issuesTotal} issues in other people's public projects, most of them bug reports. A selection:`;
-$('issues').innerHTML = D.issues.slice().reverse().map(([r, n, t, d]) => `<div><a href="https://github.com/${r}/issues/${n}">${esc(r)} #${n}</a><span class="r">${d.slice(0, 4)}</span><span class="t">${esc(t)}</span></div>`).join('');
-
-/* repo explorer */
-const st = {q: '', th: '', lang: '', sort: 'new'};
-const thKeys = Object.keys(D.themes).filter(k => D.repos.some(r => r.th === k));
-$('th').innerHTML = '<option value="">All areas</option>' + thKeys.map(k => `<option value="${k}">${esc(D.themes[k].name)}</option>`).join('');
-const langList = [...new Set(D.repos.map(r => r.l).filter(Boolean))].sort();
-$('lang').innerHTML = '<option value="">All languages</option>' + langList.map(l => `<option>${esc(l)}</option>`).join('');
-function renderRepos() {
-  const q = st.q.toLowerCase();
-  let rows = D.repos.filter(r => (!st.th || r.th === st.th) && (!st.lang || r.l === st.lang) && (!q || r.n.toLowerCase().includes(q) || r.d.toLowerCase().includes(q)));
-  rows = rows.slice().sort(st.sort === 'stars' ? (a, b) => b.s - a.s || b.c.localeCompare(a.c) : st.sort === 'old' ? (a, b) => a.c.localeCompare(b.c) : (a, b) => b.c.localeCompare(a.c));
-  $('count').textContent = `${rows.length} of ${D.repos.length}`;
-  $('rows').innerHTML = rows.length ? rows.map(r => `<tr>
-    <td><a href="https://github.com/gwuah/${encodeURIComponent(r.n)}">${esc(r.n)}</a>${r.d ? `<span class="note">${esc(r.d.replace(/:[a-z_]+:\s*/g, ''))}</span>` : ''}</td>
-    <td class="tag">${esc(D.themes[r.th].name)}</td><td class="tag">${esc(r.l || 'none')}</td><td class="num">${r.s}</td><td class="date">${fmtDate(r.c)}</td></tr>`).join('')
-    : '<tr><td colspan="5" class="empty">No repositories match. Clear the search or choose another area.</td></tr>';
-}
-$('q').addEventListener('input', e => { st.q = e.target.value; renderRepos(); });
-$('th').addEventListener('change', e => { st.th = e.target.value; renderRepos(); });
-$('lang').addEventListener('change', e => { st.lang = e.target.value; renderRepos(); });
-$('sort').addEventListener('change', e => { st.sort = e.target.value; renderRepos(); });
-renderRepos();
 </script>
 </body>
 </html>
